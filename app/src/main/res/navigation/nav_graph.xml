@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation  xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.eury.touristai.ui.main.fragments.PlaceSearchFragment"
+        android:label="main_fragment"
+        tools:layout="@layout/place_search_fragment" >
+        <action
+            android:id="@+id/placeDetailAction"
+            app:destination="@id/placeDetailsFragment" />
+        <action
+            android:id="@+id/textSearchAction"
+            app:destination="@id/textSearchFragment"
+            app:popUpTo="@+id/mainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/placeDetailsFragment"
+        android:name="com.eury.touristai.ui.main.fragments.PlaceDetailsFragment"
+        android:label="PlaceDetailsFragment" >
+        <argument
+            android:name="placeId"
+            app:type="string" />
+        <argument
+            android:name="placeName"
+            app:type="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/textSearchFragment"
+        android:name="com.eury.touristai.ui.main.fragments.dialogs.TextSearchFragment"
+        android:label="TextSearchFragment" />
+</navigation>
