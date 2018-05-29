@@ -12,6 +12,7 @@ import com.eury.touristai.repository.remote.models.WikiResponse
 import com.eury.touristai.repository.remote.requests.PlacesRequests
 import com.eury.touristai.repository.remote.requests.VisionRequests
 import com.eury.touristai.repository.remote.requests.WikiRequests
+import com.eury.touristai.utils.Credentials
 import com.eury.touristai.utils.Loggable.Companion.log
 import com.eury.touristai.utils.perform
 import com.eury.touristai.utils.stripAccents
@@ -44,7 +45,7 @@ class PlacesRepository @Inject constructor(private val visionWebService: VisionR
         doAsync {
             val existingPlace = TouristAI.database?.placeDao()?.loadPlaceByOriginalName(placeDescription.name?.toLowerCase()!!)
             if(existingPlace == null) {
-                placesWebService.getPlaceDetails(placeDescription.name ?: "", PLACES_API_KEY).perform { r, err, t ->
+                placesWebService.getPlaceDetails(placeDescription.name ?: "", Credentials.placesApiKey).perform { r, err, t ->
                     r?.results?.let {
                         savePlace(it[0], placeDescription)
                         callback(r, err, t)
@@ -59,7 +60,7 @@ class PlacesRepository @Inject constructor(private val visionWebService: VisionR
 
     private fun getVisionResultsWithImage(base64Image: String, callback: (response: PlaceDescription?, isError: Boolean, t: Throwable?) -> Unit) {
         val visionRequest = VisionLandmarkRequest(base64Image, SEARCH_FEATURES)
-        visionWebService.submitImageForAnalysis(visionRequest, VISION_API_KEY).perform { response, isError, throwable ->
+        visionWebService.submitImageForAnalysis(visionRequest, Credentials.placesApiKey).perform { response, isError, throwable ->
             val placeDescription = PlaceDescription(name = getPlaceNameByVisionResult(response),
                     wikiPageTitle = getWikiTitleByVisionResult(response))
 
@@ -144,10 +145,7 @@ class PlacesRepository @Inject constructor(private val visionWebService: VisionR
 
     data class PlaceDescription(val name:String?, val wikiPageTitle:String?)
 
-
     companion object {
         private val SEARCH_FEATURES = arrayOf("LANDMARK_DETECTION", "WEB_DETECTION")
-        private const val VISION_API_KEY = "AIzaSyDr-GdBogWl_2t4etWIi1CQLpGbvrBP7mY"
-        private const val PLACES_API_KEY = "AIzaSyATG__L98EAthNwQ3fK8zDDrlk4-bWU-wE"
     }
 }

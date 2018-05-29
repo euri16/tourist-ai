@@ -5,6 +5,7 @@ import android.view.View
 import com.eury.touristai.R
 import com.eury.touristai.repository.remote.models.PlaceSearchResponse
 import com.eury.touristai.repository.remote.models.VisionResponse
+import com.eury.touristai.utils.Credentials
 import com.eury.touristai.utils.Loggable
 import com.eury.touristai.utils.loadImage
 import kotlinx.android.synthetic.main.itv_place.view.*
@@ -32,7 +33,7 @@ class PlaceItemView(context: Context) : BaseItemView<PlaceSearchResponse.Result?
         super.bind(entity)
         tvPlaceName.text = entity?.name
         entity?.photos?.get(0)?.photoReference?.let {
-            val url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=$it&key=AIzaSyATG__L98EAthNwQ3fK8zDDrlk4-bWU-wE"
+            val url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=$it&key=$Credentials.placesApiKey"
             ivPlacePicture.loadImage(url)
         }
     }
