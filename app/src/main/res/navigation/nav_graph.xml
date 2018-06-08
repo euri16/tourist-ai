@@ -30,6 +30,6 @@
     </fragment>
     <fragment
         android:id="@+id/textSearchFragment"
-        android:name="com.eury.touristai.ui.main.fragments.dialogs.TextSearchFragment"
+        android:name="com.eury.touristai.ui.main.fragments.dialogs.TextSearchDialogFragment"
         android:label="TextSearchFragment" />
 </navigation>

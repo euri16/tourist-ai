@@ -3,7 +3,6 @@ package com.eury.touristai.ui.main.viewmodels
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
 import androidx.work.Data
-import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import androidx.work.ktx.OneTimeWorkRequestBuilder
 import com.eury.touristai.repository.PlacesRepository
@@ -14,7 +13,7 @@ import com.eury.touristai.repository.remote.requests.WikiRequests
 import com.eury.touristai.repository.remote.services.GoogleCloudServiceGenerator
 import com.eury.touristai.repository.remote.services.PlacesServiceGenerator
 import com.eury.touristai.repository.remote.services.WikipediaServiceGenerator
-import com.eury.touristai.ui.main.models.PlaceDetails
+import com.eury.touristai.ui.main.models.PlaceDetailsModel
 import com.eury.touristai.workers.FetchWikiInfoWorker
 
 /**
@@ -25,7 +24,7 @@ class PlaceDetailsViewModel : ViewModel() {
 
     var placeId = ""
 
-    var model: PlaceDetails = PlaceDetails()
+    var model: PlaceDetailsModel = PlaceDetailsModel()
 
     private var placesRepository: PlacesRepository =
             PlacesRepository(GoogleCloudServiceGenerator.createService(VisionRequests::class.java),

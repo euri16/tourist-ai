@@ -2,6 +2,7 @@ package com.eury.touristai.repository.remote.requests
 
 import com.eury.touristai.repository.remote.models.VisionLandmarkRequest
 import com.eury.touristai.repository.remote.models.VisionResponse
+import com.eury.touristai.utils.Credentials
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -16,6 +17,6 @@ interface VisionRequests {
     @POST("./images:annotate/")
     fun submitImageForAnalysis(
             @Body requests: VisionLandmarkRequest,
-            @Query("key") key: String
+            @Query("key") key: String = Credentials.placesApiKey
     ): Call<VisionResponse>
 }

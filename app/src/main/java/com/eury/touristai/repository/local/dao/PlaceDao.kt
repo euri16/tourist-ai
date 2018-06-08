@@ -26,7 +26,7 @@ interface PlaceDao {
     fun loadPlaceById(placeId:String) : LiveData<Place>
 
     @Query("SELECT * from places WHERE originalName = :placeName")
-    fun loadPlaceByOriginalName(placeName:String) : Place
+    fun loadPlaceByVisionName(placeName:String) : Place
 
     @Query("SELECT * from places WHERE place_id = :placeId")
     fun loadPlace(placeId:String) : Place

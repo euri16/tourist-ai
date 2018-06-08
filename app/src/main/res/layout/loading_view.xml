@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="130dp"
+        android:layout_height="19dp"
+        android:background="@color/shimmer_background_color"/>
+
+    <View
+        android:id="@+id/shimmer_description_1"
+        android:layout_width="39dp"
+        android:layout_height="13dp"
+        android:background="@color/shimmer_background_color"
+        android:layout_marginTop="10dp"/>
+
+</LinearLayout>

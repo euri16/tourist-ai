@@ -4,8 +4,10 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.databinding.DataBindingUtil
+import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,10 +17,14 @@ import com.eury.touristai.R
 import com.eury.touristai.TouristAI
 import com.eury.touristai.databinding.PlaceSearchFragmentBinding
 import com.eury.touristai.repository.remote.models.PlaceSearchResponse
+import com.eury.touristai.ui.main.MainActivity
 import com.eury.touristai.ui.main.viewmodels.PlaceSearchViewModel
 import com.mvc.imagepicker.ImagePicker
 import com.eury.touristai.ui.main.adapters.PlacesAdapter
+import com.eury.touristai.ui.main.fragments.dialogs.TextSearchDialogFragment
 import com.eury.touristai.utils.ExifUtil
+import com.eury.touristai.utils.Loggable.Companion.log
+import com.eury.touristai.utils.showDialog
 import kotlinx.android.synthetic.main.place_search_fragment.*
 import org.jetbrains.anko.bundleOf
 import org.jetbrains.anko.doAsync
@@ -28,7 +34,6 @@ import org.jetbrains.anko.uiThread
 class PlaceSearchFragment : Fragment() {
 
     private lateinit var viewModel: PlaceSearchViewModel
-    private lateinit var mAdapter: PlacesAdapter
     private lateinit var binding: PlaceSearchFragmentBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -40,24 +45,25 @@ class PlaceSearchFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(PlaceSearchViewModel::class.java)
+        viewModel = ViewModelProviders.of(activity!!).get(PlaceSearchViewModel::class.java)
         binding.viewModel = viewModel
-
-        // setting up recyclerview
-        mAdapter = PlacesAdapter(context!!, mutableListOf()) { place ->
-            onPlaceSelected(place)
-        }
 
         ivPickImage.setOnClickListener {
             ImagePicker.pickImage(this, "Select your image:")
         }
 
+        (activity as? AppCompatActivity)?.supportActionBar?.hide()
+
         ImagePicker.setMinQuality(600, 600)
 
         pulsator.start()
 
-        /*rvPlaces.setup(context!!)
-        rvPlaces.adapter = mAdapter*/
+        viewModel.model.isError.observe(this, Observer { isError ->
+            if(isError == true) {
+                val textSearchDialog = TextSearchDialogFragment.newInstance()
+                showDialog(textSearchDialog, true, TEXT_SEARCH_DIALOG_TAG)
+            }
+        })
 
         viewModel.getPlaces().observe(this, Observer {response ->
             response?.let {
@@ -67,11 +73,6 @@ class PlaceSearchFragment : Fragment() {
                 findNavController().navigate(action)
             }
         })
-    }
-
-    private fun onPlaceSelected(place: PlaceSearchResponse.Result?) {
-        val bundle = bundleOf("place" to place)
-        NavHostFragment.findNavController(this).navigate(R.id.placeDetailAction, bundle)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -89,5 +90,9 @@ class PlaceSearchFragment : Fragment() {
                 }
             }
         }
+    }
+
+    companion object {
+        private const val TEXT_SEARCH_DIALOG_TAG = "0"
     }
 }

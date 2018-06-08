@@ -11,17 +11,24 @@ import android.view.ViewGroup
 import com.eury.touristai.R
 import com.eury.touristai.databinding.PlaceDetailsFragmentBinding
 import com.eury.touristai.ui.main.viewmodels.PlaceDetailsViewModel
-import com.eury.touristai.utils.Loggable.Companion.log
+import com.eury.touristai.utils.loadImage
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import kotlinx.android.synthetic.main.place_details_fragment.*
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.LatLng
 
 /**
  * Created by euryperez on 5/17/18.
  * Property of Instacarro.com
  */
 
-class PlaceDetailsFragment : Fragment() {
+class PlaceDetailsFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var viewModel: PlaceDetailsViewModel
     private lateinit var binding: PlaceDetailsFragmentBinding
+    private var googleMap: GoogleMap? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.place_details_fragment, container, false)
@@ -34,13 +41,68 @@ class PlaceDetailsFragment : Fragment() {
         viewModel = ViewModelProviders.of(this).get(PlaceDetailsViewModel::class.java)
         binding.viewModel = viewModel
 
+
+        mapView.onCreate(savedInstanceState)
+        mapView.getMapAsync(this)
+
+        val shimmerLayouts = arrayOf(shlTitle, shlSummary, shlAddress)
+        shimmerLayouts.forEach { it.startShimmerAnimation() }
+
         val placeId = PlaceDetailsFragmentArgs.fromBundle(arguments).placeId
         val placeName = PlaceDetailsFragmentArgs.fromBundle(arguments).placeName
 
         viewModel.getPlace(placeId).observe(this, Observer {
-            log.d("--")
+            it?.location?.lat?.let { lat ->
+                it.location?.lng?.let { lon ->
+                    updateMapLocation(lat, lon)
+                }
+            }
+            it?.photoReferences?.get(0)?.let { photoRef ->
+                placeImage.loadImage( getString(R.string.google_photo_reference, photoRef, 1024, 1024, getString(R.string.places_api_key)))
+            }
         })
 
         viewModel.fetchPlaceDetailInfo(placeId, placeName)
+    }
+
+    private fun updateMapLocation(lat:Double, lon:Double, title:String = "") {
+        val coordinates = LatLng(lat, lon)
+        googleMap?.addMarker(MarkerOptions().position(coordinates).title(title))
+        googleMap?.moveCamera(CameraUpdateFactory.newLatLng(coordinates))
+        googleMap?.animateCamera(CameraUpdateFactory.zoomTo(MAP_ZOOM), MAP_UPDATE_DURATION, null)
+    }
+
+    override fun onMapReady(map: GoogleMap?) {
+        this.googleMap = map
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView.onResume()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        mapView.onStart()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mapView.onStop()
+    }
+
+    override fun onPause() {
+        mapView.onPause()
+        super.onPause()
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        mapView.onLowMemory()
+    }
+
+    companion object {
+        private val MAP_ZOOM = 15f
+        private val MAP_UPDATE_DURATION = 2000
     }
 }

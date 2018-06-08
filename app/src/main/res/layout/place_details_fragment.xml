@@ -7,6 +7,8 @@
 
         <import type="android.view.View" />
 
+        <import type="android.text.TextUtils" />
+
         <variable
             name="viewModel"
             type="com.eury.touristai.ui.main.viewmodels.PlaceDetailsViewModel" />
@@ -16,34 +18,59 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/placeImage"
+        <RelativeLayout
+            android:id="@+id/rlplaceImage"
             android:layout_width="match_parent"
-            android:layout_height="140dp"
-            android:background="@drawable/darkcolored_bg" />
+            android:layout_height="160dp">
+            <com.flaviofaria.kenburnsview.KenBurnsView
+                android:id="@+id/placeImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/darkcolored_bg"/>
 
-        <LinearLayout
-            android:id="@+id/info_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="15dp"
-            app:layout_constraintBottom_toTopOf="@+id/map"
-            app:layout_constraintTop_toBottomOf="@+id/placeImage">
+            <io.supercharge.shimmerlayout.ShimmerLayout
+                android:id="@+id/shlTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="@{ TextUtils.isEmpty(viewModel.model.place.name) ? View.VISIBLE : View.GONE }">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <include layout="@layout/loading_view" />
+                </LinearLayout>
+            </io.supercharge.shimmerlayout.ShimmerLayout>
 
             <TextView
                 android:id="@+id/tvTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{ viewModel.model.place.name }"
-                android:textColor="#636363"
-                android:textSize="20sp"
-                tools:text="Lorem Ipsum" />
+                android:textColor="@android:color/white"
+                android:textSize="22sp"
+                tools:text="Lorem Ipsum"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:padding="12dp"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/info_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="0dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="15dp"
+            app:layout_constraintBottom_toTopOf="@+id/mapView"
+            app:layout_constraintTop_toBottomOf="@+id/rlplaceImage">
 
             <com.whinc.widget.ratingbar.RatingBar
                 android:id="@+id/ratingBar"
                 android:layout_width="120dp"
-                android:layout_height="20dp"
+                android:layout_height="15dp"
                 android:layout_marginLeft="-10dp"
                 app:rb_click_rating="false"
                 app:rb_count="3"
@@ -94,17 +121,31 @@
                     android:textSize="12sp" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/tvSummary"
-                android:layout_width="match_parent"
+            <io.supercharge.shimmerlayout.ShimmerLayout
+                android:id="@+id/shlSummary"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:fontFamily="sans-serif-light"
-                android:text="@{ viewModel.model.place.summaryInfo }"
-                android:textSize="13sp"
-                tools:text="@string/test_lorem_ipsum_paragraph"
-                android:ellipsize="end"
-                android:maxLines="7"/>
+                android:layout_marginTop="15dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="@{ TextUtils.isEmpty(viewModel.model.place.summaryInfo) ? View.VISIBLE : View.GONE }">
+
+                    <include layout="@layout/loading_view" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvSummary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:fontFamily="sans-serif-light"
+                    android:maxLines="6"
+                    android:text="@{ viewModel.model.place.summaryInfo }"
+                    android:textSize="13sp"
+                    tools:text="@string/test_lorem_ipsum_paragraph" />
+            </io.supercharge.shimmerlayout.ShimmerLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -118,23 +159,34 @@
                     android:text="Dirección"
                     android:textSize="15sp" />
 
-                <TextView
-                    android:id="@+id/tvAddress"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-light"
-                    tools:text="C/Lorem Ipsum #13, Zona Colonial"
-                    android:text="@{ viewModel.model.place.address }"
-                    android:textSize="13sp" />
+                <io.supercharge.shimmerlayout.ShimmerLayout
+                    android:id="@+id/shlAddress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="@{ TextUtils.isEmpty(viewModel.model.place.address) ? View.VISIBLE : View.GONE }">
+
+                        <include layout="@layout/loading_view" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvAddress"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-light"
+                        android:text="@{ viewModel.model.place.address }"
+                        android:textSize="13sp"
+                        tools:text="C/Lorem Ipsum #13, Zona Colonial" />
+                </io.supercharge.shimmerlayout.ShimmerLayout>
             </LinearLayout>
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/map"
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/mapView"
             android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:background="@color/colorAccent"
-            android:orientation="vertical"
+            android:layout_height="200dp"
             app:layout_constraintBottom_toBottomOf="parent" />
     </android.support.constraint.ConstraintLayout>
 </layout>

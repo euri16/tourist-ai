@@ -1,7 +1,12 @@
 package com.eury.touristai.utils
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
+import android.support.v4.app.DialogFragment
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentActivity
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -73,4 +78,26 @@ fun View.fadeIn() {
 fun View.fadeOut() {
     this.alpha = 1f
     this.animate().alpha(0f).setDuration(1000).setInterpolator(AccelerateInterpolator()).start()
+}
+
+fun FragmentActivity.showDialog(dialogFragment: DialogFragment, cancelable: Boolean, tag: String) {
+    try {
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        dialogFragment.isCancelable = cancelable
+        fragmentTransaction.add(dialogFragment, tag)
+        fragmentTransaction.commitAllowingStateLoss()
+    } catch (ex: IllegalStateException) {
+        log.d(ex.localizedMessage)
+    }
+}
+
+fun Fragment.showDialog(dialogFragment: DialogFragment, cancelable: Boolean, tag: String) {
+    try {
+        val fragmentTransaction = childFragmentManager.beginTransaction()
+        dialogFragment.isCancelable = cancelable
+        fragmentTransaction.add(dialogFragment, tag)
+        fragmentTransaction.commitAllowingStateLoss()
+    } catch (ex: IllegalStateException) {
+        log.d(ex.localizedMessage)
+    }
 }

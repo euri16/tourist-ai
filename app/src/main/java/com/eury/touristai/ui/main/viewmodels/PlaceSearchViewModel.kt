@@ -2,7 +2,6 @@ package com.eury.touristai.ui.main.viewmodels
 
 import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
-import android.arch.lifecycle.LiveData
 import android.graphics.Bitmap
 import com.eury.touristai.repository.PlacesRepository
 import com.eury.touristai.repository.remote.models.PlaceSearchResponse
@@ -13,6 +12,7 @@ import com.eury.touristai.repository.remote.services.GoogleCloudServiceGenerator
 import com.eury.touristai.repository.remote.services.PlacesServiceGenerator
 import com.eury.touristai.repository.remote.services.WikipediaServiceGenerator
 import com.eury.touristai.ui.main.models.PlaceSearch
+import com.eury.touristai.utils.SingleLiveEvent
 import com.eury.touristai.utils.toBase64
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -21,36 +21,51 @@ class PlaceSearchViewModel(application: Application) : AndroidViewModel(applicat
 
     private var placesRepository: PlacesRepository =
             PlacesRepository(GoogleCloudServiceGenerator.createService(VisionRequests::class.java),
-                PlacesServiceGenerator.createService(PlacesRequests::class.java),
+                    PlacesServiceGenerator.createService(PlacesRequests::class.java),
                     WikipediaServiceGenerator.createService(WikiRequests::class.java))
 
-    var model:PlaceSearch = PlaceSearch()
+    var model: PlaceSearch = PlaceSearch()
 
     init {
         model.isError.value = false
         model.isLoading.value = false
     }
 
-    fun getPlaces(): LiveData<PlaceSearchResponse> {
+    fun getPlaces(): SingleLiveEvent<PlaceSearchResponse> {
         return model.places
     }
-
 
     fun submitBitmapForAnalysis(bitmap: Bitmap) {
         model.isLoading.value = true
         doAsync {
             val base64 = bitmap.toBase64()
-            placesRepository.getPlaceDetailsWithImage(base64) { response, isError, _ ->
+
+            placesRepository.getVisionDetailsWithImage(base64) { response, isError, _ ->
                 uiThread {
-                    if(response?.results !is List<PlaceSearchResponse.Result> || response.results!!.isEmpty()) {
-                        model.isError.value = true
-                    } else {
-                        model.isLoading.value = false
-                        model.places.value = response
-                        model.isError.value = isError
-                    }
+                    processPlaceResponse(response, isError)
                 }
             }
         }
+    }
+
+    fun submitPlaceName(placeName: String) {
+        placesRepository.getPlaceDetailsWithName(placeName) { response, isError, _ ->
+            processPlaceResponse(response, isError)
+        }
+    }
+
+    private fun processPlaceResponse(response: PlaceSearchResponse?, isError:Boolean) {
+        val isResponseValid = response?.results is List<PlaceSearchResponse.Result> &&
+                response.results?.isEmpty() == false
+
+        if (!isResponseValid) {
+            model.isError.value = true
+            model.isLoading.value = false
+            return
+        }
+
+        model.isLoading.value = false
+        model.places.value = response
+        model.isError.value = isError
     }
 }
