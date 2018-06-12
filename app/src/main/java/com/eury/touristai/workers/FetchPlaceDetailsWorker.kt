@@ -14,7 +14,7 @@ import com.eury.touristai.repository.remote.services.WikipediaServiceGenerator
  * Created by euryperez on 5/22/18.
  * Property of Instacarro.com
  */
-class FetchWikiInfoWorker : Worker() {
+class FetchPlaceDetailsWorker : Worker() {
 
     private val placesRepository = PlacesRepository(GoogleCloudServiceGenerator.createService(VisionRequests::class.java),
             PlacesServiceGenerator.createService(PlacesRequests::class.java),
@@ -22,21 +22,19 @@ class FetchWikiInfoWorker : Worker() {
 
     override fun doWork(): WorkerResult {
         val placeId = inputData.getString(PLACE_ID_KEY, null)
-        val placeName = inputData.getString(PLACE_NAME_KEY, null)
 
-        if(!TextUtils.isEmpty(placeId) && !TextUtils.isEmpty(placeName)) {
-            val response = placesRepository.getPlaceWikiInfoSync(placeId, placeName)
-            if(response.isSuccessful) {
-                placesRepository.processWikiResponse(response.body(), placeId)
-                return WorkerResult.SUCCESS
-            }
+        val response = placesRepository.getPlaceDetailsWithPlaceId(placeId)
+
+        if(TextUtils.isEmpty(placeId) || response?.isSuccessful == false) {
+            return WorkerResult.FAILURE
         }
 
-        return WorkerResult.FAILURE
+        placesRepository.processPlacesDetails(response?.body(), placeId)
+
+        return WorkerResult.SUCCESS
     }
 
     companion object {
         const val PLACE_ID_KEY = "PLACE_ID_KEY"
-        const val PLACE_NAME_KEY = "PLACE_NAME_KEY"
     }
 }

@@ -1,6 +1,9 @@
 <resources tools:ignore="ExtraTranslation" xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">Tourist AI</string>
-    <string name="test_lorem_ipsum_paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco…</string>
-    <string name="wikipedia_pre_url">https://es.wikipedia.org/wiki/</string>
-    <string name="google_photo_reference">https://maps.googleapis.com/maps/api/place/photo?photoreference=%1$s&amp;sensor=false&amp;maxheight=%2$d&amp;maxwidth=%3$d&amp;key=%4$s</string>
+    <string name="app_name">Kahi</string>
+    <string name="test_lorem_ipsum_paragraph" translatable="false">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco…</string>
+    <string name="wikipedia_pre_url" translatable="false">https://en.wikipedia.org/wiki/</string>
+    <string name="google_photo_reference" translatable="false">https://maps.googleapis.com/maps/api/place/photo?photoreference=%1$s&amp;sensor=false&amp;maxheight=%2$d&amp;maxwidth=%3$d&amp;key=%4$s</string>
+    <string name="open_text">Open now</string>
+    <string name="closed_text">Closed now</string>
+    <string name="app_subtitle">Discover everything about your favorite places</string>
 </resources>

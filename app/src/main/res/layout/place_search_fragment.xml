@@ -71,7 +71,7 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="20dp"
                         android:src="@drawable/ic_icon"
-                        android:visibility="@{ viewModel.model.isLoading ? View.INVISIBLE : View.VISIBLE }" />
+                        android:fadeVisible="@{ !viewModel.model.isLoading }" />
                 </pl.bclogic.pulsator4droid.library.PulsatorLayout>
 
                 <ProgressBar
@@ -79,7 +79,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:indeterminate="true"
-                    android:visibility="@{ viewModel.model.isLoading ? View.VISIBLE : View.INVISIBLE }" />
+                    android:fadeVisible="@{ viewModel.model.isLoading }" />
             </RelativeLayout>
 
             <TextView
@@ -92,7 +92,7 @@
                 android:shadowDx="1"
                 android:shadowDy="1"
                 android:shadowRadius="2"
-                android:text="Kampara"
+                android:text="@string/app_name"
                 android:textAllCaps="true"
                 android:textColor="@android:color/white"
                 android:textSize="26sp" />
@@ -107,11 +107,12 @@
                 android:shadowDx="1"
                 android:shadowDy="1"
                 android:shadowRadius="2"
-                android:text="Descubre todo sobre tus lugares favoritos"
+                android:text="@string/app_subtitle"
                 android:textColor="@android:color/white"
                 android:textSize="17sp" />
 
             <TextView
+                android:id="@+id/tvRecentSearches"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -124,7 +125,7 @@
                 android:paddingTop="10dp"
                 android:paddingRight="15dp"
                 android:paddingBottom="10dp"
-                android:text="Busquedas recientes"
+                android:text="Recent searches"
                 android:textColor="@android:color/white" />
         </LinearLayout>
     </FrameLayout>

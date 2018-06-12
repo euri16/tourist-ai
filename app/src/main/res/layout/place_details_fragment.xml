@@ -22,18 +22,21 @@
             android:id="@+id/rlplaceImage"
             android:layout_width="match_parent"
             android:layout_height="160dp">
+
             <com.flaviofaria.kenburnsview.KenBurnsView
                 android:id="@+id/placeImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/darkcolored_bg"/>
+                android:background="@drawable/darkcolored_bg"
+                android:src="@{viewModel.getPhotoUrl(viewModel.model.place.photoReferences)}" />
 
             <io.supercharge.shimmerlayout.ShimmerLayout
                 android:id="@+id/shlTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:visibility="@{ TextUtils.isEmpty(viewModel.model.place.name) ? View.VISIBLE : View.GONE }">
+                android:visibility="@{ TextUtils.isEmpty(viewModel.model.place.name) }">
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
@@ -46,13 +49,17 @@
                 android:id="@+id/tvTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:padding="12dp"
                 android:text="@{ viewModel.model.place.name }"
                 android:textColor="@android:color/white"
                 android:textSize="22sp"
                 tools:text="Lorem Ipsum"
-                android:layout_centerInParent="true"
-                android:gravity="center"
-                android:padding="12dp"/>
+                android:shadowColor="@android:color/black"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowRadius="2" />
         </RelativeLayout>
 
         <LinearLayout
@@ -60,25 +67,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="0dp"
             android:paddingLeft="15dp"
+            android:paddingTop="0dp"
             android:paddingRight="15dp"
             android:paddingBottom="15dp"
             app:layout_constraintBottom_toTopOf="@+id/mapView"
             app:layout_constraintTop_toBottomOf="@+id/rlplaceImage">
 
-            <com.whinc.widget.ratingbar.RatingBar
-                android:id="@+id/ratingBar"
-                android:layout_width="120dp"
+            <me.zhanghai.android.materialratingbar.MaterialRatingBar
+                style="@style/Widget.MaterialRatingBar.RatingBar.Small"
+                android:layout_width="100dp"
                 android:layout_height="15dp"
-                android:layout_marginLeft="-10dp"
-                app:rb_click_rating="false"
-                app:rb_count="3"
-                app:rb_empty="@drawable/ic_star_empty"
-                app:rb_fill="@drawable/ic_star_filled"
-                app:rb_max_count="5"
-                app:rb_space="-10dp"
-                app:rb_touch_rating="false" />
+                android:rating="@{viewModel.model.place.rating}"
+                android:visibility="@{ viewModel.model.place.rating &gt; 0 }" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -91,14 +92,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/black_radius_bg"
-                    android:drawableEnd="@drawable/ic_open_indicator"
-                    android:drawableRight="@drawable/ic_open_indicator"
+                    android:drawableEnd="@{viewModel.isOpen(viewModel.model.place.openingHours) ? @drawable/ic_open_indicator : @drawable/ic_close_indicator}"
+                    android:drawableRight="@{viewModel.isOpen(viewModel.model.place.openingHours) ? @drawable/ic_open_indicator : @drawable/ic_close_indicator}"
                     android:drawablePadding="5dp"
                     android:paddingLeft="10dp"
                     android:paddingTop="3dp"
                     android:paddingRight="10dp"
                     android:paddingBottom="3dp"
-                    android:text="Abierto"
+                    android:text="@{viewModel.getOpenStatus(viewModel.model.place.openingHours)}"
                     android:textColor="@android:color/white"
                     android:textSize="12sp" />
 
@@ -116,9 +117,10 @@
                     android:paddingTop="3dp"
                     android:paddingRight="10dp"
                     android:paddingBottom="3dp"
-                    android:text="+1 809 555 5555"
+                    android:text="@{viewModel.model.place.phoneNumber}"
                     android:textColor="@android:color/white"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:fadeVisible="@{ !TextUtils.isEmpty(viewModel.model.place.phoneNumber) }" />
             </LinearLayout>
 
             <io.supercharge.shimmerlayout.ShimmerLayout
@@ -130,7 +132,7 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="@{ TextUtils.isEmpty(viewModel.model.place.summaryInfo) ? View.VISIBLE : View.GONE }">
+                    android:visibility="@{ TextUtils.isEmpty(viewModel.model.place.summaryInfo) }">
 
                     <include layout="@layout/loading_view" />
                 </LinearLayout>
@@ -150,6 +152,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fadeVisible="@{ !TextUtils.isEmpty(viewModel.model.place.address) }"
                 android:orientation="vertical">
 
                 <TextView
@@ -159,30 +162,17 @@
                     android:text="Dirección"
                     android:textSize="15sp" />
 
-                <io.supercharge.shimmerlayout.ShimmerLayout
-                    android:id="@+id/shlAddress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:visibility="@{ TextUtils.isEmpty(viewModel.model.place.address) ? View.VISIBLE : View.GONE }">
-
-                        <include layout="@layout/loading_view" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/tvAddress"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif-light"
-                        android:text="@{ viewModel.model.place.address }"
-                        android:textSize="13sp"
-                        tools:text="C/Lorem Ipsum #13, Zona Colonial" />
-                </io.supercharge.shimmerlayout.ShimmerLayout>
+                <TextView
+                    android:id="@+id/tvAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+                    android:text="@{ viewModel.model.place.address }"
+                    android:textSize="13sp"
+                    tools:text="C/Lorem Ipsum #13, Zona Colonial" />
             </LinearLayout>
         </LinearLayout>
+
         <com.google.android.gms.maps.MapView
             android:id="@+id/mapView"
             android:layout_width="match_parent"

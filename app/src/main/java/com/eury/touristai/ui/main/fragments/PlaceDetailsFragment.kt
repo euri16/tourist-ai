@@ -8,10 +8,12 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.work.State
+import androidx.work.WorkManager
+import androidx.work.Worker
 import com.eury.touristai.R
 import com.eury.touristai.databinding.PlaceDetailsFragmentBinding
 import com.eury.touristai.ui.main.viewmodels.PlaceDetailsViewModel
-import com.eury.touristai.utils.loadImage
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import kotlinx.android.synthetic.main.place_details_fragment.*
@@ -41,28 +43,40 @@ class PlaceDetailsFragment : Fragment(), OnMapReadyCallback {
         viewModel = ViewModelProviders.of(this).get(PlaceDetailsViewModel::class.java)
         binding.viewModel = viewModel
 
-
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
 
-        val shimmerLayouts = arrayOf(shlTitle, shlSummary, shlAddress)
+        val shimmerLayouts = arrayOf(shlTitle, shlSummary)
         shimmerLayouts.forEach { it.startShimmerAnimation() }
 
         val placeId = PlaceDetailsFragmentArgs.fromBundle(arguments).placeId
-        val placeName = PlaceDetailsFragmentArgs.fromBundle(arguments).placeName
 
-        viewModel.getPlace(placeId).observe(this, Observer {
-            it?.location?.lat?.let { lat ->
-                it.location?.lng?.let { lon ->
-                    updateMapLocation(lat, lon)
-                }
-            }
-            it?.photoReferences?.get(0)?.let { photoRef ->
-                placeImage.loadImage( getString(R.string.google_photo_reference, photoRef, 1024, 1024, getString(R.string.places_api_key)))
+        WorkManager.getInstance().getStatusesByTag(PlaceDetailsViewModel.FETCH_WIKI_DATA_WITH_NAME)
+                .observe(this, Observer { workStatuses ->
+                    val workStatus = workStatuses?.getOrNull(0)
+                    if(workStatus?.state?.equals(State.FAILED) == true) {
+                        viewModel.fetchWikiDetailInfo(placeId, workTag = PlaceDetailsViewModel.FETCH_WIKI_DATA_WITH_WIKI_TITLE)
+                    }
+                })
+
+        WorkManager.getInstance().getStatusesByTag(PlaceDetailsViewModel.FETCH_WIKI_DATA_WITH_WIKI_TITLE)
+                .observe(this, Observer { workStatuses ->
+                    val workStatus = workStatuses?.getOrNull(0)
+                    if(workStatus?.state?.equals(State.FAILED) == true) {
+                        viewModel.fetchWikiDetailInfo(placeId, workTag = PlaceDetailsViewModel.FETCH_WIKI_DATA_WITH_WEB_ENTITY)
+                    }
+                })
+
+        viewModel.getPlace(placeId)?.observe(this, Observer { place ->
+            val lat = place?.location?.lat
+            val lon = place?.location?.lng
+
+            if(lat is Double && lon is Double) {
+                updateMapLocation(lat, lon)
             }
         })
 
-        viewModel.fetchPlaceDetailInfo(placeId, placeName)
+        viewModel.fetchWikiDetailInfo(placeId)
     }
 
     private fun updateMapLocation(lat:Double, lon:Double, title:String = "") {
@@ -102,7 +116,7 @@ class PlaceDetailsFragment : Fragment(), OnMapReadyCallback {
     }
 
     companion object {
-        private val MAP_ZOOM = 15f
-        private val MAP_UPDATE_DURATION = 2000
+        private const val MAP_ZOOM = 15f
+        private const val MAP_UPDATE_DURATION = 2000
     }
 }

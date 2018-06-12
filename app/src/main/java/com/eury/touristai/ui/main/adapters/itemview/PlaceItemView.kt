@@ -3,6 +3,7 @@ package com.eury.touristai.ui.main.adapters.itemview
 import android.content.Context
 import android.view.View
 import com.eury.touristai.R
+import com.eury.touristai.repository.local.entities.Place
 import com.eury.touristai.repository.remote.models.PlaceSearchResponse
 import com.eury.touristai.repository.remote.models.VisionResponse
 import com.eury.touristai.utils.Credentials
@@ -16,7 +17,7 @@ import kotlinx.android.synthetic.main.place_search_fragment.view.*
  * Created by euryperez on 3/2/18.
  */
 
-class PlaceItemView(context: Context) : BaseItemView<PlaceSearchResponse.Result?>
+class PlaceItemView(context: Context) : BaseItemView<Place?>
 (context, R.layout.itv_place), Loggable, View.OnClickListener {
 
     private var mListener: OnPlaceSelectedListener? = null
@@ -29,11 +30,11 @@ class PlaceItemView(context: Context) : BaseItemView<PlaceSearchResponse.Result?
         setOnClickListener(this)
     }
 
-    override fun bind(entity: PlaceSearchResponse.Result?) {
+    override fun bind(entity: Place?) {
         super.bind(entity)
         tvPlaceName.text = entity?.name
-        entity?.photos?.get(0)?.photoReference?.let {
-            val url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=$it&key=$Credentials.placesApiKey"
+        entity?.photoReferences?.get(0)?.let {
+            val url = context.getString(R.string.google_photo_reference, it, 1024, 1024, Credentials.placesApiKey)
             ivPlacePicture.loadImage(url)
         }
     }
@@ -43,6 +44,6 @@ class PlaceItemView(context: Context) : BaseItemView<PlaceSearchResponse.Result?
     }
 
     interface OnPlaceSelectedListener {
-        fun onPlaceSelected(place: PlaceSearchResponse.Result?)
+        fun onPlaceSelected(place: Place?)
     }
 }

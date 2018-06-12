@@ -7,6 +7,7 @@ import android.arch.persistence.room.OnConflictStrategy.REPLACE
 import android.arch.persistence.room.Query
 import android.arch.persistence.room.Update
 import com.eury.touristai.repository.local.entities.Place
+import java.util.*
 
 /**
  * Created by euryperez on 5/20/18.
@@ -32,5 +33,5 @@ interface PlaceDao {
     fun loadPlace(placeId:String) : Place
 
     @Query("SELECT * from places")
-    fun loadAll() : List<Place>
+    fun loadAll() : LiveData<List<Place>>
 }

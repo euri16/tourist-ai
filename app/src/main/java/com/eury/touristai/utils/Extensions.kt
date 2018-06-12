@@ -1,5 +1,6 @@
 package com.eury.touristai.utils
 
+import android.animation.Animator
 import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
@@ -21,6 +22,13 @@ import retrofit2.Response
 import java.io.ByteArrayOutputStream
 import android.view.animation.AccelerateInterpolator
 import java.text.Normalizer
+import android.animation.AnimatorListenerAdapter
+import android.support.v4.view.ViewCompat.animate
+import android.support.v4.view.ViewCompat.animate
+
+
+
+
 
 
 /**
@@ -71,13 +79,22 @@ fun <T> Call<T>.perform(onCallCompleted: (response: T?, isError: Boolean, t: Thr
 }
 
 fun View.fadeIn() {
+    this.visibility = View.VISIBLE
     this.alpha = 0f
-    this.animate().alpha(1f).setDuration(1000).setInterpolator(AccelerateInterpolator()).start()
+    this.animate().alpha(1f).setListener(object : AnimatorListenerAdapter() {
+        override fun onAnimationEnd(animation: Animator) {
+            this@fadeIn.alpha = 1f
+        }
+    })
 }
 
 fun View.fadeOut() {
-    this.alpha = 1f
-    this.animate().alpha(0f).setDuration(1000).setInterpolator(AccelerateInterpolator()).start()
+    this.animate().alpha(0f).setListener(object : AnimatorListenerAdapter() {
+        override fun onAnimationEnd(animation: Animator) {
+            this@fadeOut.alpha = 1f
+            this@fadeOut.visibility = View.GONE
+        }
+    })
 }
 
 fun FragmentActivity.showDialog(dialogFragment: DialogFragment, cancelable: Boolean, tag: String) {

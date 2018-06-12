@@ -1,6 +1,7 @@
 package com.eury.touristai.repository.local.typeConverters
 
 import android.arch.persistence.room.TypeConverter
+import com.eury.touristai.repository.remote.models.PlaceDetailsResponse
 import com.eury.touristai.repository.remote.models.PlaceSearchResponse
 import com.google.gson.Gson
 
@@ -11,13 +12,13 @@ import com.google.gson.Gson
 class OpeningHoursConverter {
 
     @TypeConverter
-    fun toOpeningHours(json: String?): PlaceSearchResponse.OpeningHours? {
+    fun toOpeningHours(json: String?): PlaceDetailsResponse.OpeningHours? {
         if(json == null) return null
-        return Gson().fromJson(json, PlaceSearchResponse.OpeningHours::class.java)
+        return Gson().fromJson(json, PlaceDetailsResponse.OpeningHours::class.java)
     }
 
     @TypeConverter
-    fun fromOpeningHours(openingHours: PlaceSearchResponse.OpeningHours?): String? {
+    fun fromOpeningHours(openingHours: PlaceDetailsResponse.OpeningHours?): String? {
         if(openingHours == null) return null
         return Gson().toJson(openingHours)
     }

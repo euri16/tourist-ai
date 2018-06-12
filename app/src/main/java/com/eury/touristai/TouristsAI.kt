@@ -4,6 +4,11 @@ import android.app.Application
 import android.arch.persistence.room.Room
 import android.content.Context
 import com.eury.touristai.repository.local.AppDb
+import android.os.Build
+import java.util.*
+import android.os.LocaleList
+import net.danlew.android.joda.JodaTimeAndroid
+
 
 /**
  * Created by euryperez on 5/10/18.
@@ -19,9 +24,22 @@ class TouristAI : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        JodaTimeAndroid.init(this)
         TouristAI.database = Room.databaseBuilder(this, AppDb::class.java, DB_NAME)
                 .fallbackToDestructiveMigration()
                 .build()
+
+        changeLocale(Locale("en", "US"))
+    }
+
+    fun changeLocale(locale: Locale) {
+        val conf = resources.configuration
+        conf.locale = locale
+        Locale.setDefault(locale)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            conf.setLayoutDirection(conf.locale)
+        }
+        resources.updateConfiguration(conf, resources.displayMetrics)
     }
 
     companion object {

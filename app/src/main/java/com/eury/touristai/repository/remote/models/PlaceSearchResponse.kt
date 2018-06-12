@@ -23,8 +23,6 @@ class PlaceSearchResponse constructor() : Serializable {
 
     data class Location (var lat: Double? = null, var lng: Double? = null) : Serializable
 
-    data class OpeningHours (@SerializedName("open_now") var openNow: Boolean? = null) : Serializable
-
     class Result constructor() : Serializable {
         var geometry: Geometry? = null
         var icon: String? = null
@@ -32,9 +30,6 @@ class PlaceSearchResponse constructor() : Serializable {
         var name: String? = null
         @SerializedName("formatted_address")
         var formattedAddress: String? = null
-        @SerializedName("opening_hours")
-        @Expose
-        var openingHours: OpeningHours? = null
         var photos: List<Photo>? = null
         @SerializedName("place_id")
         @Expose
@@ -53,6 +48,7 @@ class PlaceSearchResponse constructor() : Serializable {
         fun buildPlace(placeDescription: PlacesRepository.PlaceDescription? = null) : Place {
 
             val place = Place(placeId = this.placeId!!)
+            place.name = this.name
             //place.openingHours = placeResult.openingHours
             place.photoReferences = this.photos?.map { it.photoReference!! }
             place.location = this.geometry?.location
@@ -60,6 +56,7 @@ class PlaceSearchResponse constructor() : Serializable {
             place.rating = this.rating
             place.originalName = placeDescription?.name
             place.wikiPageTitle = placeDescription?.wikiPageTitle
+            place.webEntityTitle = placeDescription?.webEntityTitle
 
             return place
         }

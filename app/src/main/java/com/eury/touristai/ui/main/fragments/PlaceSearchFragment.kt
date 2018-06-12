@@ -58,10 +58,17 @@ class PlaceSearchFragment : Fragment() {
 
         pulsator.start()
 
+        tvRecentSearches.setOnClickListener {
+            findNavController().navigate(R.id.searchHistoryAction)
+        }
+
         viewModel.model.isError.observe(this, Observer { isError ->
             if(isError == true) {
-                val textSearchDialog = TextSearchDialogFragment.newInstance()
-                showDialog(textSearchDialog, true, TEXT_SEARCH_DIALOG_TAG)
+                val fragment = activity!!.supportFragmentManager.findFragmentByTag(TEXT_SEARCH_DIALOG_TAG)
+                if(fragment == null) {
+                    val textSearchDialog = TextSearchDialogFragment.newInstance()
+                    showDialog(textSearchDialog, true, TEXT_SEARCH_DIALOG_TAG)
+                }
             }
         })
 

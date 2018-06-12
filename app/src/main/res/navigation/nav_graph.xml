@@ -16,6 +16,9 @@
             android:id="@+id/textSearchAction"
             app:destination="@id/textSearchFragment"
             app:popUpTo="@+id/mainFragment" />
+        <action
+            android:id="@+id/searchHistoryAction"
+            app:destination="@id/searchHistoryListFragment" />
     </fragment>
     <fragment
         android:id="@+id/placeDetailsFragment"
@@ -32,4 +35,9 @@
         android:id="@+id/textSearchFragment"
         android:name="com.eury.touristai.ui.main.fragments.dialogs.TextSearchDialogFragment"
         android:label="TextSearchFragment" />
+    <fragment
+        android:id="@+id/searchHistoryListFragment"
+        android:name="com.eury.touristai.ui.main.fragments.SearchHistoryListFragment"
+        android:label="search_history_list_fragment"
+        tools:layout="@layout/search_history_list_fragment" />
 </navigation>

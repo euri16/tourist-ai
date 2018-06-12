@@ -3,8 +3,12 @@ package com.eury.touristai.ui.main.bindingAdapters
 import android.arch.lifecycle.MutableLiveData
 import android.databinding.BindingAdapter
 import android.view.View
+import android.widget.ImageView
 import com.eury.touristai.utils.fadeIn
 import com.eury.touristai.utils.fadeOut
+import com.bumptech.glide.Glide
+
+
 
 
 /**
@@ -14,20 +18,32 @@ import com.eury.touristai.utils.fadeOut
 object BindingAdapters {
 
 
-    @BindingAdapter("fadeVisible")
+    @BindingAdapter("android:fadeVisible")
     @JvmStatic
-    fun View.setFadeVisible(visible: MutableLiveData<Boolean>) {
-        if (this.tag == null) {
-            this.tag = true
-            this.visibility = if (visible.value == true) View.VISIBLE else View.GONE
+    fun setFadeVisible(view:View, visible: Boolean) {
+        if (view.tag == null) {
+            view.tag = true
+            view.visibility = if (visible == true) View.VISIBLE else View.GONE
         } else {
-            this.animate().cancel()
-            if (visible.value == true) {
-                this.fadeIn()
+            view.animate().cancel()
+            if (visible) {
+                view.fadeIn()
             } else {
-                this.fadeOut()
+                view.fadeOut()
             }
         }
+    }
+
+    @BindingAdapter("android:visibility")
+    @JvmStatic
+    fun setViewVisibility(view:View, visible: Boolean) {
+        view.visibility = if (visible == true) View.VISIBLE else View.GONE
+    }
+
+    @BindingAdapter("android:src")
+    @JvmStatic
+    fun setImageUrl(view: ImageView, url: String) {
+        Glide.with(view.context).load(url).into(view)
     }
 
 }

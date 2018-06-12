@@ -49,6 +49,7 @@ class PlaceSearchViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun submitPlaceName(placeName: String) {
+        model.isLoading.value = true
         placesRepository.getPlaceDetailsWithName(placeName) { response, isError, _ ->
             processPlaceResponse(response, isError)
         }
