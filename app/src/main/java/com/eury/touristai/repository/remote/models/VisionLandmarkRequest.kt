@@ -12,7 +12,9 @@ data class VisionLandmarkRequest (var requests: List<VisionLandmarkRequestDetail
         requests = arrayListOf(requestDetail)
     }
 
-    data class VisionLandmarkRequestDetail (val image:VisionLandmarkImage, val features:List<VisionLandmarkFeature>)
+    data class VisionLandmarkRequestDetail (val image:VisionLandmarkImage, val features:List<VisionLandmarkFeature>, val imageContext: ImageContext = ImageContext())
     data class VisionLandmarkImage (val content:String)
     data class VisionLandmarkFeature (val type:String)
+    data class ImageContext(val webDetectionParams: WebDetectionParams = WebDetectionParams(true))
+    data class WebDetectionParams(val includeGeoResults:Boolean = true)
 }

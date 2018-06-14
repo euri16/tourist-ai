@@ -48,7 +48,7 @@ class PlaceSearchResponse constructor() : Serializable {
         fun buildPlace(placeDescription: PlacesRepository.PlaceDescription? = null) : Place {
 
             val place = Place(placeId = this.placeId!!)
-            place.name = this.name
+            place.name = placeDescription?.webEntityTitle
             //place.openingHours = placeResult.openingHours
             place.photoReferences = this.photos?.map { it.photoReference!! }
             place.location = this.geometry?.location
