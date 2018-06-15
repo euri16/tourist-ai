@@ -10,7 +10,6 @@ gen/
 out/
 
 # Gradle files
-gradlew*
 gradle/
 .gradle/
 build/
