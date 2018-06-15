@@ -7,6 +7,8 @@ import com.eury.touristai.repository.local.AppDb
 import android.os.Build
 import java.util.*
 import android.os.LocaleList
+import com.crashlytics.android.Crashlytics
+import io.fabric.sdk.android.Fabric
 import net.danlew.android.joda.JodaTimeAndroid
 
 
@@ -24,6 +26,7 @@ class TouristAI : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        Fabric.with(this, Crashlytics())
         JodaTimeAndroid.init(this)
         TouristAI.database = Room.databaseBuilder(this, AppDb::class.java, DB_NAME)
                 .fallbackToDestructiveMigration()

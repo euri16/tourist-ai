@@ -16,12 +16,6 @@ import com.eury.touristai.repository.remote.models.PlaceDetailsResponse
 class Place constructor(@ColumnInfo(name = "place_id") @PrimaryKey var placeId:String) {
     var name: String? = null
 
-    var originalName: String? = null
-
-    var wikiPageTitle: String? = null
-
-    var webEntityTitle: String? = null
-
     @TypeConverters(OpeningHoursConverter::class)
     var openingHours: PlaceDetailsResponse.OpeningHours? = null
 

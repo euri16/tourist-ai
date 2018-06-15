@@ -52,7 +52,7 @@
                 android:layout_centerInParent="true"
                 android:gravity="center"
                 android:padding="12dp"
-                android:text="@{ viewModel.model.place.name }"
+                android:capsText="@{ viewModel.model.place.name }"
                 android:textColor="@android:color/white"
                 android:textSize="22sp"
                 tools:text="Lorem Ipsum"

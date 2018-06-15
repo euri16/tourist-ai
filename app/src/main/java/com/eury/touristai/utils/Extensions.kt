@@ -54,6 +54,10 @@ fun RecyclerView.setup(context: Context) {
     this.layoutManager = LinearLayoutManager(context)
 }
 
+fun String.capsWord() : String {
+    return this.split(' ').joinToString(" ") { it.capitalize() }
+}
+
 fun String.stripAccents(): String {
     var string = Normalizer.normalize(this, Normalizer.Form.NFD)
     string = Regex("\\p{InCombiningDiacriticalMarks}+").replace(string, "")

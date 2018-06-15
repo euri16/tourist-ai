@@ -9,16 +9,12 @@ import java.util.*
 
 data class VisionResponse (val responses: LinkedList<VisionLandmarkResponse>) {
 
-    data class VisionLandmarkResponse (val landmarkAnnotations:List<VisionLandmarkResponseDetail>?,
-                                       val webDetection:WebDetectionDetail?)
+    data class VisionLandmarkResponse (val webDetection:WebDetectionDetail?)
 
-    data class VisionLandmarkResponseDetail (val mid:String, val description:String, val score:Float)
     data class WebDetectionDetail(val visuallySimilarImages:List<SimilarImage>,
                                   val bestGuessLabels:List<GuessLabel>,
-                                  val webEntities:List<WebEntity>,
-                                  val pagesWithMatchingImages:List<PageWithMatchingImages>)
+                                  val webEntities:List<WebEntity>)
     data class SimilarImage(val url:String)
     data class GuessLabel(val label:String)
-    data class WebEntity(val description: String)
-    data class PageWithMatchingImages(val url: String, val pageTitle:String)
+    data class WebEntity(val description: String, val score:Float)
 }

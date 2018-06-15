@@ -1,8 +1,6 @@
 package com.eury.touristai.repository
 
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import com.eury.touristai.R
 import com.eury.touristai.TouristAI
 import com.eury.touristai.repository.local.entities.Place
 import com.eury.touristai.repository.remote.models.*
@@ -14,7 +12,6 @@ import com.eury.touristai.utils.stripAccents
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import retrofit2.Response
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -29,39 +26,37 @@ class PlacesRepository @Inject constructor(private val visionWebService: VisionR
                                            private val wikiWebService: WikiRequests) {
 
     fun getVisionDetailsWithImage(base64Image: String, callback: (PlaceSearchResponse?, isError: Boolean, t: Throwable?) -> Unit) {
-        getVisionResultsWithImage(base64Image) { placeDescription, _, _ ->
-            placeDescription?.name?.let {
-                getPlaceDetailsWithPlaceDescription(placeDescription) { r2, err2, t2 ->
+        getVisionResultsWithImage(base64Image) { placeName, _, _ ->
+            placeName?.let {
+                getPlaceDetailsWithPlaceName(placeName) { r2, err2, t2 ->
                     callback(r2, err2, t2)
                 }
                 return@getVisionResultsWithImage
             }
-
             callback(null, true, null)
         }
     }
 
     fun getPlaceDetailsWithName(placeName: String, callback: (PlaceSearchResponse?, isError: Boolean, t: Throwable?) -> Unit) {
-        val placeDescription = PlaceDescription(name = placeName, wikiPageTitle = null, webEntityTitle = null)
-        getPlaceDetailsWithPlaceDescription(placeDescription) { response, isError, t ->
+        getPlaceDetailsWithPlaceName(placeName) { response, isError, t ->
             callback(response, isError, t)
         }
     }
 
-    private fun getPlaceDetailsWithPlaceDescription(placeDescription: PlaceDescription, callback: (PlaceSearchResponse?, isError: Boolean, t: Throwable?) -> Unit) {
+    private fun getPlaceDetailsWithPlaceName(placeName: String, callback: (PlaceSearchResponse?, isError: Boolean, t: Throwable?) -> Unit) {
         doAsync {
-            val existingPlace = getPlaceByVisionName(placeDescription.name?.toLowerCase() ?: "")
+            val existingPlace = getPlaceByVisionName(placeName.toLowerCase())
             existingPlace?.let {
                 uiThread {
-                    val placeSearchResponse = PlaceSearchResponse(placeDescription.name!!, existingPlace)
+                    val placeSearchResponse = PlaceSearchResponse(placeName, existingPlace)
                     callback(placeSearchResponse, false, null)
                 }
                 return@doAsync
             }
 
-            placesWebService.getPlace(placeDescription.name ?: "").perform { r, err, t ->
+            placesWebService.getPlace(placeName).perform { r, err, t ->
                 r?.results?.getOrNull(0)?.let {
-                    savePlace(it, placeDescription)
+                    savePlace(it, placeName)
                     callback(r, err, t)
                     return@perform
                 }
@@ -76,33 +71,32 @@ class PlacesRepository @Inject constructor(private val visionWebService: VisionR
     }
 
     private fun getVisionResultsWithImage(base64Image: String,
-                                          callback: (response: PlaceDescription?, isError: Boolean, t: Throwable?) -> Unit) {
+                                          callback: (placeName: String?, isError: Boolean, t: Throwable?) -> Unit) {
         val visionRequest = VisionLandmarkRequest(base64Image, SEARCH_FEATURES)
 
         visionWebService.submitImageForAnalysis(visionRequest).perform { response, isError, throwable ->
             val placeName = getPlaceNameByVisionResult(response)
-            val webEntityTitle = getWebEntityTitleByVisionResult(response)
-            val wikiTitle = getWikiTitleByVisionResult(response)
 
-            val placeDescription = PlaceDescription(placeName, wikiTitle, webEntityTitle)
-            callback(placeDescription, isError, throwable)
+            callback(placeName, isError, throwable)
         }
     }
 
-    private fun getWebEntityTitleByVisionResult(response: VisionResponse?): String? {
+    private fun getWebEntityByVisionResult(response: VisionResponse?): VisionResponse.WebEntity? {
         val webEntities = response?.responses?.filter { it.webDetection?.webEntities?.isEmpty() == false }
         webEntities?.getOrNull(0)?.let {
-            return webEntities[0].webDetection?.webEntities?.get(0)?.description
+            return webEntities[0].webDetection?.webEntities?.get(0)
         }
-        return ""
+        return null
     }
 
     private fun getPlaceNameByVisionResult(response: VisionResponse?): String? {
         var placeName: String? = null
 
-        val landmarkAnnotations = response?.responses?.filter { it.landmarkAnnotations?.isEmpty() == false }
-        if (landmarkAnnotations?.isEmpty() == false) {
-            placeName = landmarkAnnotations[0].landmarkAnnotations?.get(0)?.description
+        val webEntity = getWebEntityByVisionResult(response)
+        webEntity?.let {
+            if(webEntity.score >= WEB_ENTITY_MIN_SCORE) {
+                placeName = webEntity.description
+            }
         }
 
         val guessLabels = response?.responses?.filter { it.webDetection?.bestGuessLabels?.isEmpty() == false }
@@ -110,30 +104,14 @@ class PlacesRepository @Inject constructor(private val visionWebService: VisionR
             placeName = guessLabels[0].webDetection?.bestGuessLabels?.get(0)?.label
         }
 
-        val webEntities = response?.responses?.filter { it.webDetection?.webEntities?.isEmpty() == false }
-        if (placeName == null && webEntities?.isEmpty() == false) {
-            placeName = webEntities[0].webDetection?.webEntities?.get(0)?.description
-        }
-
         return placeName
     }
 
-    private fun getWikiTitleByVisionResult(response: VisionResponse?): String? {
-        val pageWithMatchingImgs = response?.responses?.filter { it.webDetection?.pagesWithMatchingImages?.isEmpty() == false }
-
-        if (pageWithMatchingImgs?.isEmpty() == true) {
-            return null
-        }
-
-        val wikiPreUrl = TouristAI.applicationContext().getString(R.string.wikipedia_pre_url)
-        val wikiPages = pageWithMatchingImgs?.get(0)?.webDetection?.pagesWithMatchingImages?.filter {
-            it.url.contains(wikiPreUrl) && !it.url.endsWith(".jpg") && !it.url.endsWith(".png")
-        }
-
-        return wikiPages?.getOrNull(0)?.url?.replace(wikiPreUrl, "")
+    fun getPlaceWikiInfoQuerySync(placeName:String): Response<WikiQueryResponse> {
+        return wikiWebService.getQueryResults(queryText = placeName).execute()
     }
 
-    fun getPlaceWikiInfoSync(placeId: String, placeName: String): Response<WikiResponse> {
+    fun getPlaceWikiInfoSync(placeName: String): Response<WikiResponse> {
         return wikiWebService.getPlaceInfo(placeName.stripAccents()).execute()
     }
 
@@ -141,13 +119,12 @@ class PlacesRepository @Inject constructor(private val visionWebService: VisionR
         doAsync {
             val place = TouristAI.database?.placeDao()?.loadPlace(placeId)
             place?.let {
-                val extract = response?.extract?.let { it } ?: ""
+                val extract = response?.extract?.let { it } ?: "-"
                 place.summaryInfo = extract
-                place.name = response?.displayTitle ?: ""
+                //place.name = response?.displayTitle ?: ""
                 TouristAI.database?.placeDao()?.update(it)
             }
         }
-
     }
 
     fun processPlacesDetails(response: PlaceDetailsResponse?, placeId: String) {
@@ -174,11 +151,11 @@ class PlacesRepository @Inject constructor(private val visionWebService: VisionR
         return placeId?.let { TouristAI.database?.placeDao()?.loadPlace(it) }
     }
 
-    private fun savePlace(placeResult: PlaceSearchResponse.Result, placeDescription: PlaceDescription) {
+    private fun savePlace(placeResult: PlaceSearchResponse.Result, placeName: String) {
         doAsync {
             val placeExists = getPlaceByPlaceId(placeResult.placeId!!) != null
             if (!placeExists) {
-                val place = placeResult.buildPlace(placeDescription)
+                val place = placeResult.buildPlace(placeName)
                 TouristAI.database?.placeDao()?.save(place)
             }
         }
@@ -188,9 +165,8 @@ class PlacesRepository @Inject constructor(private val visionWebService: VisionR
         return TouristAI.database?.placeDao()?.loadAll()
     }
 
-    data class PlaceDescription(val name: String?, val wikiPageTitle: String?, val webEntityTitle: String?)
-
     companion object {
-        private val SEARCH_FEATURES = arrayOf("LANDMARK_DETECTION", "WEB_DETECTION")
+        private val SEARCH_FEATURES = arrayOf("WEB_DETECTION")
+        private val WEB_ENTITY_MIN_SCORE = 1.3
     }
 }

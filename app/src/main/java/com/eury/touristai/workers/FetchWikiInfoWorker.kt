@@ -25,14 +25,26 @@ class FetchWikiInfoWorker : Worker() {
         val placeName = inputData.getString(PLACE_NAME_KEY, null)
 
         if(!TextUtils.isEmpty(placeId) && !TextUtils.isEmpty(placeName)) {
-            val response = placesRepository.getPlaceWikiInfoSync(placeId, placeName)
-            if(response.isSuccessful) {
-                placesRepository.processWikiResponse(response.body(), placeId)
-                return WorkerResult.SUCCESS
+            val queryResponse = placesRepository.getPlaceWikiInfoQuerySync(placeName)
+
+            if(queryResponse.isSuccessful) {
+                val wikiPageTitle = queryResponse.body()?.query?.search?.getOrNull(0)?.title
+                if(wikiPageTitle?.isNotEmpty() == true) {
+                    val pageResponse = placesRepository.getPlaceWikiInfoSync(wikiPageTitle)
+                    if(pageResponse.isSuccessful) {
+                        placesRepository.processWikiResponse(pageResponse.body(), placeId)
+                        return WorkerResult.SUCCESS
+                    }
+                }
             }
         }
 
+        processPlaceNotFound(placeId)
         return WorkerResult.FAILURE
+    }
+
+    private fun processPlaceNotFound(placeId:String) {
+        placesRepository.processWikiResponse(null, placeId)
     }
 
     companion object {

@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.work.State
 import androidx.work.WorkManager
-import androidx.work.Worker
 import com.eury.touristai.R
 import com.eury.touristai.databinding.PlaceDetailsFragmentBinding
 import com.eury.touristai.ui.main.viewmodels.PlaceDetailsViewModel
@@ -55,15 +54,7 @@ class PlaceDetailsFragment : Fragment(), OnMapReadyCallback {
                 .observe(this, Observer { workStatuses ->
                     val workStatus = workStatuses?.getOrNull(0)
                     if(workStatus?.state?.equals(State.FAILED) == true) {
-                        viewModel.fetchWikiDetailInfo(placeId, workTag = PlaceDetailsViewModel.FETCH_WIKI_DATA_WITH_WIKI_TITLE)
-                    }
-                })
 
-        WorkManager.getInstance().getStatusesByTag(PlaceDetailsViewModel.FETCH_WIKI_DATA_WITH_WIKI_TITLE)
-                .observe(this, Observer { workStatuses ->
-                    val workStatus = workStatuses?.getOrNull(0)
-                    if(workStatus?.state?.equals(State.FAILED) == true) {
-                        viewModel.fetchWikiDetailInfo(placeId, workTag = PlaceDetailsViewModel.FETCH_WIKI_DATA_WITH_WEB_ENTITY)
                     }
                 })
 

@@ -45,18 +45,14 @@ class PlaceSearchResponse constructor() : Serializable {
             this.name = placeName
         }
 
-        fun buildPlace(placeDescription: PlacesRepository.PlaceDescription? = null) : Place {
+        fun buildPlace(placeName: String? = null) : Place {
 
             val place = Place(placeId = this.placeId!!)
-            place.name = placeDescription?.webEntityTitle
-            //place.openingHours = placeResult.openingHours
+            place.name = placeName
             place.photoReferences = this.photos?.map { it.photoReference!! }
             place.location = this.geometry?.location
             place.address = this.formattedAddress
             place.rating = this.rating
-            place.originalName = placeDescription?.name
-            place.wikiPageTitle = placeDescription?.wikiPageTitle
-            place.webEntityTitle = placeDescription?.webEntityTitle
 
             return place
         }

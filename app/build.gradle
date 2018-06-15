@@ -3,6 +3,7 @@ apply plugin: 'androidx.navigation.safeargs'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'io.fabric'
 
 kapt {
     generateStubs = true
@@ -106,4 +107,8 @@ dependencies {
     implementation 'pl.bclogic:pulsator4droid:1.0.3'
     implementation 'io.supercharge:shimmerlayout:2.1.0'
     implementation 'net.danlew:android.joda:2.9.9.4'
+
+    compile('com.crashlytics.sdk.android:crashlytics:2.9.4@aar') {
+        transitive = true;
+    }
 }

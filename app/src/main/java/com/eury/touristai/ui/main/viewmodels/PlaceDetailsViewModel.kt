@@ -3,6 +3,8 @@ package com.eury.touristai.ui.main.viewmodels
 import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.LiveData
+import android.arch.persistence.room.util.StringUtil
+import android.text.TextUtils
 import androidx.work.Data
 import androidx.work.WorkManager
 import androidx.work.ktx.OneTimeWorkRequestBuilder
@@ -64,22 +66,18 @@ class PlaceDetailsViewModel(application: Application) : AndroidViewModel(applica
     fun fetchWikiDetailInfo(placeId: String, workTag:String = FETCH_WIKI_DATA_WITH_NAME) {
         doAsync {
             val place = placesRepository.getPlaceByPlaceId(placeId)
-            val placeName =  when(workTag) {
-                FETCH_WIKI_DATA_WITH_WIKI_TITLE -> place?.wikiPageTitle ?: ""
-                FETCH_WIKI_DATA_WITH_WEB_ENTITY -> place?.webEntityTitle ?: ""
-                else -> place?.name ?: ""
-           }
 
-             val wikiByNameWork = OneTimeWorkRequestBuilder<FetchWikiInfoWorker>()
-                    .setInputData(buildWikiWorkerData(placeId, placeName))
-                    .addTag(workTag)
-                    .build()
+            place?.name?.let {
+                val wikiByNameWork = OneTimeWorkRequestBuilder<FetchWikiInfoWorker>()
+                        .setInputData(buildWikiWorkerData(placeId, it))
+                        .addTag(workTag)
+                        .build()
 
-            val placeDetailsWork = OneTimeWorkRequestBuilder<FetchPlaceDetailsWorker>()
-                    .setInputData(buildPlaceDetailsWorkerData(placeId))
-                    .build()
-
-            WorkManager.getInstance().enqueue(wikiByNameWork, placeDetailsWork)
+                val placeDetailsWork = OneTimeWorkRequestBuilder<FetchPlaceDetailsWorker>()
+                        .setInputData(buildPlaceDetailsWorkerData(placeId))
+                        .build()
+                WorkManager.getInstance().enqueue(wikiByNameWork, placeDetailsWork)
+            }
         }
     }
 
@@ -131,8 +129,6 @@ class PlaceDetailsViewModel(application: Application) : AndroidViewModel(applica
     }
 
     companion object {
-        const val FETCH_WIKI_DATA_WITH_NAME = "0"
-        const val FETCH_WIKI_DATA_WITH_WIKI_TITLE = "1"
-        const val FETCH_WIKI_DATA_WITH_WEB_ENTITY = "2"
+        const val FETCH_WIKI_DATA_WITH_NAME = "001"
     }
 }
