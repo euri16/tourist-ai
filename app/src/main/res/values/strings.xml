@@ -6,6 +6,4 @@
     <string name="open_text">Open now</string>
     <string name="closed_text">Closed now</string>
     <string name="app_subtitle">Discover everything about your favorite places</string>
-    <string name="places_api_key"></string>
-    <string name="vision_api_key"></string>
 </resources>
