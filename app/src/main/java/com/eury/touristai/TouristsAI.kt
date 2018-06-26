@@ -1,12 +1,10 @@
 package com.eury.touristai
 
-import android.app.Application
 import android.arch.persistence.room.Room
 import android.content.Context
 import com.eury.touristai.repository.local.AppDb
 import android.os.Build
 import java.util.*
-import android.os.LocaleList
 import android.support.multidex.MultiDexApplication
 import com.crashlytics.android.Crashlytics
 import com.google.android.gms.ads.MobileAds
