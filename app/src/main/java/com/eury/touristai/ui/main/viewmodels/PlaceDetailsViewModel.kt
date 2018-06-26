@@ -110,10 +110,10 @@ class PlaceDetailsViewModel(application: Application) : AndroidViewModel(applica
             return true
         }
 
-        val period = openingHours.periods?.filter { it.open?.day?.equals(dayOfWeek) == true }
+        val period = openingHours.periods?.filter { it.open?.day?.equals(dayOfWeek.toString()) == true }
 
-        if(period?.isEmpty() == true || (period?.getOrNull(0)?.open?.time?.toInt() ?: 0) < militaryTime ||
-                (period?.getOrNull(0)?.close?.time?.toInt() ?: 0) > militaryTime) {
+        if(period?.isEmpty() == true || militaryTime < (period?.getOrNull(0)?.open?.time?.toInt() ?: 0) ||
+                militaryTime > (period?.getOrNull(0)?.close?.time?.toInt() ?: 0)) {
             return false
         }
 

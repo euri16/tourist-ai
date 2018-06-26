@@ -38,6 +38,6 @@
     <fragment
         android:id="@+id/searchHistoryListFragment"
         android:name="com.eury.touristai.ui.main.fragments.SearchHistoryListFragment"
-        android:label="search_history_list_fragment"
+        android:label="Recent Searches"
         tools:layout="@layout/search_history_list_fragment" />
 </navigation>

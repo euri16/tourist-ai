@@ -20,18 +20,18 @@ class FetchPlaceDetailsWorker : Worker() {
             PlacesServiceGenerator.createService(PlacesRequests::class.java),
             WikipediaServiceGenerator.createService(WikiRequests::class.java))
 
-    override fun doWork(): WorkerResult {
+    override fun doWork(): Worker.Result {
         val placeId = inputData.getString(PLACE_ID_KEY, null)
 
         val response = placesRepository.getPlaceDetailsWithPlaceId(placeId)
 
         if(TextUtils.isEmpty(placeId) || response?.isSuccessful == false) {
-            return WorkerResult.FAILURE
+            return Worker.Result.FAILURE
         }
 
         placesRepository.processPlacesDetails(response?.body(), placeId)
 
-        return WorkerResult.SUCCESS
+        return Worker.Result.SUCCESS
     }
 
     companion object {

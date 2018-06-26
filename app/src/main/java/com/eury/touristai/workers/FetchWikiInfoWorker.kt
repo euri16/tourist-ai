@@ -20,7 +20,7 @@ class FetchWikiInfoWorker : Worker() {
             PlacesServiceGenerator.createService(PlacesRequests::class.java),
             WikipediaServiceGenerator.createService(WikiRequests::class.java))
 
-    override fun doWork(): WorkerResult {
+    override fun doWork(): Worker.Result {
         val placeId = inputData.getString(PLACE_ID_KEY, null)
         val placeName = inputData.getString(PLACE_NAME_KEY, null)
 
@@ -33,14 +33,14 @@ class FetchWikiInfoWorker : Worker() {
                     val pageResponse = placesRepository.getPlaceWikiInfoSync(wikiPageTitle)
                     if(pageResponse.isSuccessful) {
                         placesRepository.processWikiResponse(pageResponse.body(), placeId)
-                        return WorkerResult.SUCCESS
+                        return Worker.Result.SUCCESS
                     }
                 }
             }
         }
 
         processPlaceNotFound(placeId)
-        return WorkerResult.FAILURE
+        return Worker.Result.FAILURE
     }
 
     private fun processPlaceNotFound(placeId:String) {

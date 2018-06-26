@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:ads="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -11,7 +12,7 @@
             type="com.eury.touristai.ui.main.viewmodels.PlaceSearchViewModel" />
     </data>
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -29,10 +30,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="40dp"
-            android:layout_marginTop="90dp"
-            android:layout_marginRight="40dp"
-            android:layout_marginBottom="60dp"
+            android:layout_marginLeft="@dimen/f_place_search_ll_container_margin_sides"
+            android:layout_marginRight="@dimen/f_place_search_ll_container_margin_sides"
+            android:layout_marginTop="@dimen/f_place_search_ll_container_margin_top"
+            android:layout_marginBottom="@dimen/f_place_search_ll_container_margin_bottom"
             android:orientation="vertical">
 
             <TextView
@@ -43,10 +44,10 @@
                 android:shadowDx="1"
                 android:shadowDy="1"
                 android:shadowRadius="1"
-                android:text="Tap to Discover"
+                android:text="@string/tap_to_discover"
                 android:textAllCaps="true"
                 android:textColor="@android:color/white"
-                android:textSize="19sp" />
+                android:textSize="@dimen/f_place_search_tv_tap_find_textsize" />
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -55,21 +56,21 @@
 
                 <pl.bclogic.pulsator4droid.library.PulsatorLayout
                     android:id="@+id/pulsator"
+                    android:layout_width="@dimen/f_place_search_pulsator_size"
+                    android:layout_height="@dimen/f_place_search_pulsator_size"
                     app:pulse_color="@android:color/white"
                     app:pulse_count="4"
                     app:pulse_duration="7000"
                     app:pulse_interpolator="AccelerateDecelerate"
                     app:pulse_repeat="0"
-                    app:pulse_startFromScratch="false"
-                    android:layout_width="220dp"
-                    android:layout_height="220dp">
+                    app:pulse_startFromScratch="false">
 
                     <ImageView
                         android:id="@+id/ivPickImage"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="@dimen/f_place_search_iv_pick_margin_top"
                         android:src="@drawable/ic_icon"
                         android:fadeVisible="@{ !viewModel.model.isLoading }" />
                 </pl.bclogic.pulsator4droid.library.PulsatorLayout>
@@ -85,7 +86,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="@dimen/f_place_search_tv_app_name_margin_top"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
                 android:shadowColor="@android:color/black"
@@ -95,7 +96,7 @@
                 android:text="@string/app_name"
                 android:textAllCaps="true"
                 android:textColor="@android:color/white"
-                android:textSize="26sp" />
+                android:textSize="@dimen/f_place_search_tv_app_name_textsize" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -109,24 +110,33 @@
                 android:shadowRadius="2"
                 android:text="@string/app_subtitle"
                 android:textColor="@android:color/white"
-                android:textSize="17sp" />
+                android:textSize="@dimen/f_place_search_tv_app_subtitle_textsize" />
 
             <TextView
                 android:id="@+id/tvRecentSearches"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="35dp"
+                android:layout_marginTop="@dimen/f_place_search_tv_recent_searches_margin_top"
                 android:background="@drawable/black_radius_bg"
                 android:drawableStart="@drawable/ic_recent_search"
                 android:drawableLeft="@drawable/ic_recent_search"
                 android:drawablePadding="10dp"
-                android:paddingLeft="15dp"
-                android:paddingTop="10dp"
-                android:paddingRight="15dp"
-                android:paddingBottom="10dp"
-                android:text="Recent searches"
+                android:paddingLeft="@dimen/f_place_search_tv_recent_searches_padding_sides"
+                android:paddingRight="@dimen/f_place_search_tv_recent_searches_padding_sides"
+                android:paddingTop="@dimen/f_place_search_tv_recent_searches_padding_top_bottom"
+                android:paddingBottom="@dimen/f_place_search_tv_recent_searches_padding_top_bottom"
+                android:text="@string/recent_searches"
                 android:textColor="@android:color/white" />
         </LinearLayout>
-    </FrameLayout>
+
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            ads:adSize="BANNER"
+            ads:adUnitId="@string/banner_ad_unit_id"/>
+    </RelativeLayout>
 </layout>

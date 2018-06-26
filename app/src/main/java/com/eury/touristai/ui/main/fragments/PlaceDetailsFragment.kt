@@ -50,14 +50,6 @@ class PlaceDetailsFragment : Fragment(), OnMapReadyCallback {
 
         val placeId = PlaceDetailsFragmentArgs.fromBundle(arguments).placeId
 
-        WorkManager.getInstance().getStatusesByTag(PlaceDetailsViewModel.FETCH_WIKI_DATA_WITH_NAME)
-                .observe(this, Observer { workStatuses ->
-                    val workStatus = workStatuses?.getOrNull(0)
-                    if(workStatus?.state?.equals(State.FAILED) == true) {
-
-                    }
-                })
-
         viewModel.getPlace(placeId)?.observe(this, Observer { place ->
             val lat = place?.location?.lat
             val lon = place?.location?.lng

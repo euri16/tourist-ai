@@ -2,13 +2,9 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-
     <data>
-
         <import type="android.view.View" />
-
         <import type="android.text.TextUtils" />
-
         <variable
             name="viewModel"
             type="com.eury.touristai.ui.main.viewmodels.PlaceDetailsViewModel" />
@@ -17,30 +13,25 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
         <RelativeLayout
             android:id="@+id/rlplaceImage"
             android:layout_width="match_parent"
-            android:layout_height="160dp">
-
+            android:layout_height="@dimen/f_place_details_rl_img_container">
             <com.flaviofaria.kenburnsview.KenBurnsView
                 android:id="@+id/placeImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/darkcolored_bg"
                 android:src="@{viewModel.getPhotoUrl(viewModel.model.place.photoReferences)}" />
-
             <io.supercharge.shimmerlayout.ShimmerLayout
                 android:id="@+id/shlTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:visibility="@{ TextUtils.isEmpty(viewModel.model.place.name) }">
-
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
-
                     <include layout="@layout/loading_view" />
                 </LinearLayout>
             </io.supercharge.shimmerlayout.ShimmerLayout>
@@ -51,11 +42,11 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:gravity="center"
-                android:padding="12dp"
+                android:padding="@dimen/f_place_details_tv_title_padding"
                 android:capsText="@{ viewModel.model.place.name }"
                 android:textColor="@android:color/white"
-                android:textSize="22sp"
-                tools:text="Lorem Ipsum"
+                android:textSize="@dimen/f_place_details_tv_title_textsize"
+                tools:text="Lorem Ipsum Dolor sit Amet Ecdotaelus Alpha Beta Dolor Sit Ipsum"
                 android:shadowColor="@android:color/black"
                 android:shadowDx="1"
                 android:shadowDy="1"
@@ -67,24 +58,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingLeft="15dp"
-            android:paddingTop="0dp"
-            android:paddingRight="15dp"
-            android:paddingBottom="15dp"
+            android:paddingLeft="@dimen/f_place_details_ll_info_container_padding_sides"
+            android:paddingRight="@dimen/f_place_details_ll_info_container_padding_sides"
+            android:paddingBottom="@dimen/f_place_details_ll_info_container_padding_bottom"
             app:layout_constraintBottom_toTopOf="@+id/mapView"
             app:layout_constraintTop_toBottomOf="@+id/rlplaceImage">
 
             <me.zhanghai.android.materialratingbar.MaterialRatingBar
                 style="@style/Widget.MaterialRatingBar.RatingBar.Small"
-                android:layout_width="100dp"
-                android:layout_height="15dp"
+                android:layout_width="@dimen/f_place_details_rating_bar_width"
+                android:layout_height="@dimen/f_place_details_rating_bar_height"
                 android:rating="@{viewModel.model.place.rating}"
                 android:visibility="@{ viewModel.model.place.rating &gt; 0 }" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="@dimen/f_place_details_ll_is_open_container"
                 android:orientation="horizontal">
 
                 <TextView
@@ -94,14 +84,15 @@
                     android:background="@drawable/black_radius_bg"
                     android:drawableEnd="@{viewModel.isOpen(viewModel.model.place.openingHours) ? @drawable/ic_open_indicator : @drawable/ic_close_indicator}"
                     android:drawableRight="@{viewModel.isOpen(viewModel.model.place.openingHours) ? @drawable/ic_open_indicator : @drawable/ic_close_indicator}"
-                    android:drawablePadding="5dp"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="3dp"
-                    android:paddingRight="10dp"
-                    android:paddingBottom="3dp"
+                    android:drawablePadding="@dimen/f_place_details_tv_open_now_drawable_padding"
+                    android:paddingLeft="@dimen/f_place_details_tv_open_now_padding_sides"
+                    android:paddingTop="@dimen/f_place_details_tv_open_now_padding_top_bottom"
+                    android:paddingRight="@dimen/f_place_details_tv_open_now_padding_sides"
+                    android:paddingBottom="@dimen/f_place_details_tv_open_now_padding_top_bottom"
                     android:text="@{viewModel.getOpenStatus(viewModel.model.place.openingHours)}"
                     android:textColor="@android:color/white"
-                    android:textSize="12sp" />
+                    android:textSize="@dimen/f_place_details_tv_open_now_textsize"
+                    tools:text="Closed Now" />
 
                 <TextView
                     android:id="@+id/tvPhone"
@@ -112,40 +103,38 @@
                     android:background="@drawable/black_radius_bg"
                     android:drawableStart="@drawable/ic_phone"
                     android:drawableLeft="@drawable/ic_phone"
-                    android:drawablePadding="5dp"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="3dp"
-                    android:paddingRight="10dp"
-                    android:paddingBottom="3dp"
+                    android:drawablePadding="@dimen/f_place_details_tv_phone_drawable_padding"
+                    android:paddingLeft="@dimen/f_place_details_tv_phone_padding_sides"
+                    android:paddingTop="@dimen/f_place_details_tv_phone_padding_top_bottom"
+                    android:paddingRight="@dimen/f_place_details_tv_phone_padding_sides"
+                    android:paddingBottom="@dimen/f_place_details_tv_phone_padding_top_bottom"
                     android:text="@{viewModel.model.place.phoneNumber}"
                     android:textColor="@android:color/white"
-                    android:textSize="12sp"
-                    android:fadeVisible="@{ !TextUtils.isEmpty(viewModel.model.place.phoneNumber) }" />
+                    android:textSize="@dimen/f_place_details_tv_phone_textsize"
+                    android:fadeVisible="@{ !TextUtils.isEmpty(viewModel.model.place.phoneNumber) }"
+                    tools:text="+1 829-523-0983"/>
             </LinearLayout>
 
             <io.supercharge.shimmerlayout.ShimmerLayout
                 android:id="@+id/shlSummary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp">
-
+                android:layout_marginTop="@dimen/f_place_details_shl_summary_margin_top">
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:visibility="@{ TextUtils.isEmpty(viewModel.model.place.summaryInfo) }">
-
                     <include layout="@layout/loading_view" />
                 </LinearLayout>
-
                 <TextView
                     android:id="@+id/tvSummary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:fontFamily="sans-serif-light"
-                    android:maxLines="6"
+                    android:maxLines="@integer/place_summary_max_lines"
                     android:text="@{ viewModel.model.place.summaryInfo }"
-                    android:textSize="13sp"
+                    android:textSize="@dimen/f_place_details_tv_summary_textsize"
                     tools:text="@string/test_lorem_ipsum_paragraph" />
             </io.supercharge.shimmerlayout.ShimmerLayout>
 
@@ -159,8 +148,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="Dirección"
-                    android:textSize="15sp" />
+                    android:text="@string/address_title"
+                    android:textSize="@dimen/f_place_details_tv_address_title_textsize" />
 
                 <TextView
                     android:id="@+id/tvAddress"
@@ -168,7 +157,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-light"
                     android:text="@{ viewModel.model.place.address }"
-                    android:textSize="13sp"
+                    android:textSize="@dimen/f_place_details_tv_address_textsize"
                     tools:text="C/Lorem Ipsum #13, Zona Colonial" />
             </LinearLayout>
         </LinearLayout>
@@ -176,7 +165,7 @@
         <com.google.android.gms.maps.MapView
             android:id="@+id/mapView"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="@dimen/f_place_details_map_view_height"
             app:layout_constraintBottom_toBottomOf="parent" />
     </android.support.constraint.ConstraintLayout>
 </layout>

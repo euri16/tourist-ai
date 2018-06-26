@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="f_place_details_rl_img_container">160dp</dimen>
+    <dimen name="f_place_details_tv_title_padding">16dp</dimen>
+    <dimen name="f_place_details_tv_title_textsize">20sp</dimen>
+    <dimen name="f_place_details_ll_info_container_padding_sides">15dp</dimen>
+    <dimen name="f_place_details_ll_info_container_padding_bottom">15dp</dimen>
+    <dimen name="f_place_details_rating_bar_width">100dp</dimen>
+    <dimen name="f_place_details_rating_bar_height">15dp</dimen>
+    <dimen name="f_place_details_ll_is_open_container">5dp</dimen>
+    <dimen name="f_place_details_tv_open_now_drawable_padding">5dp</dimen>
+    <dimen name="f_place_details_tv_open_now_padding_sides">10dp</dimen>
+    <dimen name="f_place_details_tv_open_now_padding_top_bottom">3dp</dimen>
+    <dimen name="f_place_details_tv_open_now_textsize">12sp</dimen>
+    <dimen name="f_place_details_tv_phone_drawable_padding">5dp</dimen>
+    <dimen name="f_place_details_tv_phone_padding_sides">10dp</dimen>
+    <dimen name="f_place_details_tv_phone_padding_top_bottom">3dp</dimen>
+    <dimen name="f_place_details_tv_phone_textsize">12sp</dimen>
+    <dimen name="f_place_details_shl_summary_margin_top">15dp</dimen>
+    <dimen name="f_place_details_tv_summary_textsize">14sp</dimen>
+    <dimen name="f_place_details_tv_address_title_textsize">16sp</dimen>
+    <dimen name="f_place_details_tv_address_textsize">14sp</dimen>
+    <dimen name="f_place_details_map_view_height">170dp</dimen>
+</resources>

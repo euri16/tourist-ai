@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="f_place_details_tv_title_padding">20dp</dimen>
+    <dimen name="f_place_details_rating_bar_width">120dp</dimen>
+    <dimen name="f_place_details_rating_bar_height">19dp</dimen>
+    <dimen name="f_place_details_tv_open_now_textsize">12sp</dimen>
+    <dimen name="f_place_details_tv_phone_textsize">12sp</dimen>
+    <dimen name="f_place_details_tv_summary_textsize">14sp</dimen>
+    <dimen name="f_place_details_tv_address_title_textsize">16sp</dimen>
+    <dimen name="f_place_details_tv_address_textsize">14sp</dimen>
+    <dimen name="f_place_details_map_view_height">170dp</dimen>
+    <dimen name="f_place_details_rl_img_container">170dp</dimen>
+    <dimen name="f_place_details_tv_title_textsize">20sp</dimen>
+
+    <dimen name="f_place_search_ll_container_margin_top">70dp</dimen>
+    <dimen name="f_place_search_ll_container_margin_bottom">30dp</dimen>
+    <dimen name="f_place_search_tv_tap_find_textsize">18sp</dimen>
+    <dimen name="f_place_search_pulsator_size">200dp</dimen>
+    <dimen name="f_place_search_tv_app_name_margin_top">10dp</dimen>
+    <dimen name="f_place_search_tv_app_name_textsize">27sp</dimen>
+    <dimen name="f_place_search_tv_recent_searches_margin_top">25dp</dimen>
+</resources>

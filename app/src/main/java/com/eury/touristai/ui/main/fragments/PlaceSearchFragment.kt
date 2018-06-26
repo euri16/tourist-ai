@@ -25,6 +25,7 @@ import com.eury.touristai.ui.main.fragments.dialogs.TextSearchDialogFragment
 import com.eury.touristai.utils.ExifUtil
 import com.eury.touristai.utils.Loggable.Companion.log
 import com.eury.touristai.utils.showDialog
+import com.google.android.gms.ads.AdRequest
 import kotlinx.android.synthetic.main.place_search_fragment.*
 import org.jetbrains.anko.bundleOf
 import org.jetbrains.anko.doAsync
@@ -35,6 +36,8 @@ class PlaceSearchFragment : Fragment() {
 
     private lateinit var viewModel: PlaceSearchViewModel
     private lateinit var binding: PlaceSearchFragmentBinding
+
+    private var mTextSearchDialog: TextSearchDialogFragment? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -47,6 +50,11 @@ class PlaceSearchFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(activity!!).get(PlaceSearchViewModel::class.java)
         binding.viewModel = viewModel
+
+        val adRequest = AdRequest.Builder()
+                .addTestDevice("3C4B0849D78F920065BC35369C976A74")
+                .build()
+        adView.loadAd(adRequest)
 
         ivPickImage.setOnClickListener {
             ImagePicker.pickImage(this, "Select your image:")
@@ -63,16 +71,13 @@ class PlaceSearchFragment : Fragment() {
         }
 
         viewModel.model.isError.observe(this, Observer { isError ->
-            if(isError == true) {
-                val fragment = activity!!.supportFragmentManager.findFragmentByTag(TEXT_SEARCH_DIALOG_TAG)
-                if(fragment == null) {
-                    val textSearchDialog = TextSearchDialogFragment.newInstance()
-                    showDialog(textSearchDialog, true, TEXT_SEARCH_DIALOG_TAG)
-                }
+            if (isError == true && !(mTextSearchDialog?.isAdded ?: false)) {
+                mTextSearchDialog = TextSearchDialogFragment.newInstance()
+                showDialog(mTextSearchDialog!!, true, TEXT_SEARCH_DIALOG_TAG)
             }
         })
 
-        viewModel.getPlaces().observe(this, Observer {response ->
+        viewModel.getPlaces().observe(this, Observer { response ->
             response?.let {
                 val placeId = response.results?.get(0)?.placeId
                 val placeName = response.results?.get(0)?.name
