@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.eury.touristai.R
 import com.eury.touristai.repository.local.entities.Place
 import com.eury.touristai.ui.main.adapters.PlacesAdapter
@@ -48,7 +49,10 @@ class SearchHistoryListFragment : Fragment() {
     }
 
     private fun onPlaceSelected(place: Place?) {
-
+        val placeId = place?.placeId
+        val placeName = place?.name
+        val action = PlaceSearchFragmentDirections.placeDetailAction(placeId, placeName)
+        findNavController().navigate(action)
     }
 
     companion object {

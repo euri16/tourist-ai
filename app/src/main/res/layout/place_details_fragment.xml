@@ -167,5 +167,16 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/f_place_details_map_view_height"
             app:layout_constraintBottom_toBottomOf="parent" />
+        <TextView
+            android:id="@+id/tvOpenMaps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Open in maps"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_margin="13dp"
+            android:background="@drawable/black_radius_bg"
+            android:padding="13dp"
+            android:textColor="@android:color/white"/>
     </android.support.constraint.ConstraintLayout>
 </layout>

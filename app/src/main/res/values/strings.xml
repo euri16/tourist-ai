@@ -3,10 +3,11 @@
     <string name="test_lorem_ipsum_paragraph" translatable="false">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</string>
     <string name="wikipedia_pre_url" translatable="false">https://en.wikipedia.org/wiki/</string>
     <string name="google_photo_reference" translatable="false">https://maps.googleapis.com/maps/api/place/photo?photoreference=%1$s&amp;sensor=false&amp;maxheight=%2$d&amp;maxwidth=%3$d&amp;key=%4$s</string>
+    <string name="maps_query_intent">https://www.google.com/maps/search/?api=1&amp;query=query&amp;query_place_id=%1$s</string>
     <string name="open_text">Open now</string>
     <string name="closed_text">Closed now</string>
     <string name="app_subtitle">Discover everything about your favorite places</string>
-    <string name="address_title">Dirección</string>
+    <string name="address_title">Address</string>
     <string name="tap_to_discover">Tap to Discover</string>
     <string name="recent_searches">Recent searches</string>
 </resources>

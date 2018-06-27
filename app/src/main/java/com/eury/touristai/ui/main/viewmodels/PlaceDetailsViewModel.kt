@@ -3,11 +3,9 @@ package com.eury.touristai.ui.main.viewmodels
 import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.LiveData
-import android.arch.persistence.room.util.StringUtil
-import android.text.TextUtils
 import androidx.work.Data
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import androidx.work.ktx.OneTimeWorkRequestBuilder
 import com.eury.touristai.R
 import com.eury.touristai.TouristAI
 import com.eury.touristai.repository.PlacesRepository

@@ -71,8 +71,8 @@ class PlaceSearchFragment : Fragment() {
         }
 
         viewModel.model.isError.observe(this, Observer { isError ->
+            if(mTextSearchDialog == null) { mTextSearchDialog = TextSearchDialogFragment.newInstance() }
             if (isError == true && !(mTextSearchDialog?.isAdded ?: false)) {
-                mTextSearchDialog = TextSearchDialogFragment.newInstance()
                 showDialog(mTextSearchDialog!!, true, TEXT_SEARCH_DIALOG_TAG)
             }
         })
