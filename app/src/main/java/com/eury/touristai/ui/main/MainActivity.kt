@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
 import android.util.Log
-import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
@@ -41,9 +40,6 @@ class MainActivity : AppCompatActivity(), TextSearchDialogFragment.OnTextSearchL
             } catch (e: Resources.NotFoundException) {
                 Integer.toString(destination.id)
             }
-
-            Toast.makeText(this@MainActivity, "Navigated to $dest",
-                    Toast.LENGTH_SHORT).show()
             Log.d("NavigationActivity", "Navigated to $dest")
         }
     }

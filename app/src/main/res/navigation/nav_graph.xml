@@ -39,5 +39,9 @@
         android:id="@+id/searchHistoryListFragment"
         android:name="com.eury.touristai.ui.main.fragments.SearchHistoryListFragment"
         android:label="Recent Searches"
-        tools:layout="@layout/search_history_list_fragment" />
+        tools:layout="@layout/search_history_list_fragment" >
+        <action
+            android:id="@+id/placeDetailAction"
+            app:destination="@id/placeDetailsFragment" />
+    </fragment>
 </navigation>

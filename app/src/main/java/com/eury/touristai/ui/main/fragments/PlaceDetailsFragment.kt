@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,11 @@ import kotlinx.android.synthetic.main.place_details_fragment.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.LatLng
+import android.support.v4.content.ContextCompat.startActivity
+import android.content.Intent
+import android.net.Uri
+import java.util.*
+
 
 /**
  * Created by euryperez on 5/17/18.
@@ -39,6 +45,7 @@ class PlaceDetailsFragment : Fragment(), OnMapReadyCallback {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        (activity as? AppCompatActivity)?.supportActionBar?.hide()
         viewModel = ViewModelProviders.of(this).get(PlaceDetailsViewModel::class.java)
         binding.viewModel = viewModel
 
@@ -57,9 +64,19 @@ class PlaceDetailsFragment : Fragment(), OnMapReadyCallback {
             if(lat is Double && lon is Double) {
                 updateMapLocation(lat, lon)
             }
+
+            tvOpenMaps.setOnClickListener {
+                val gmmIntentUri = Uri.parse(getString(R.string.maps_query_intent, place?.placeId))
+                val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+                mapIntent.setPackage("com.google.android.apps.maps")
+                mapIntent.resolveActivity(context?.packageManager)?.let {
+                    context?.startActivity(mapIntent)
+                }
+            }
         })
 
         viewModel.fetchWikiDetailInfo(placeId)
+
     }
 
     private fun updateMapLocation(lat:Double, lon:Double, title:String = "") {
