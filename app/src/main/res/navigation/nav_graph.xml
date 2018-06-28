@@ -2,28 +2,37 @@
 <navigation  xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/mainFragment">
+    app:startDestination="@id/splashFragment">
 
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.eury.touristai.ui.main.fragments.PlaceSearchFragment"
-        android:label="main_fragment"
+        android:label=""
         tools:layout="@layout/place_search_fragment" >
         <action
             android:id="@+id/placeDetailAction"
-            app:destination="@id/placeDetailsFragment" />
+            app:destination="@id/placeDetailsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/textSearchAction"
             app:destination="@id/textSearchFragment"
             app:popUpTo="@+id/mainFragment" />
         <action
             android:id="@+id/searchHistoryAction"
-            app:destination="@id/searchHistoryListFragment" />
+            app:destination="@id/searchHistoryListFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@+id/mainFragment" />
     </fragment>
     <fragment
         android:id="@+id/placeDetailsFragment"
         android:name="com.eury.touristai.ui.main.fragments.PlaceDetailsFragment"
-        android:label="PlaceDetailsFragment" >
+        android:label="" >
         <argument
             android:name="placeId"
             app:type="string" />
@@ -34,7 +43,7 @@
     <fragment
         android:id="@+id/textSearchFragment"
         android:name="com.eury.touristai.ui.main.fragments.dialogs.TextSearchDialogFragment"
-        android:label="TextSearchFragment" />
+        android:label="" />
     <fragment
         android:id="@+id/searchHistoryListFragment"
         android:name="com.eury.touristai.ui.main.fragments.SearchHistoryListFragment"
@@ -42,6 +51,24 @@
         tools:layout="@layout/search_history_list_fragment" >
         <action
             android:id="@+id/placeDetailAction"
-            app:destination="@id/placeDetailsFragment" />
+            app:destination="@id/placeDetailsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.eury.touristai.ui.main.fragments.SplashFragment"
+        android:label=""
+        tools:layout="@layout/fragment_splash" >
+        <action
+            android:id="@+id/mainFragment"
+            app:destination="@id/mainFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
     </fragment>
 </navigation>

@@ -118,15 +118,17 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/f_place_search_tv_recent_searches_margin_top"
-                android:background="@drawable/black_radius_bg"
-                android:drawableStart="@drawable/ic_recent_search"
-                android:drawableLeft="@drawable/ic_recent_search"
-                android:drawablePadding="10dp"
+                android:background="@drawable/orange_radius_bg"
+                android:drawableStart="@drawable/search_drawable_left"
+                android:drawableLeft="@drawable/search_drawable_left"
+                android:drawablePadding="3dp"
                 android:paddingLeft="@dimen/f_place_search_tv_recent_searches_padding_sides"
                 android:paddingRight="@dimen/f_place_search_tv_recent_searches_padding_sides"
                 android:paddingTop="@dimen/f_place_search_tv_recent_searches_padding_top_bottom"
                 android:paddingBottom="@dimen/f_place_search_tv_recent_searches_padding_top_bottom"
                 android:text="@string/recent_searches"
+                android:gravity="center_vertical"
+                android:textStyle="bold"
                 android:textColor="@android:color/white" />
         </LinearLayout>
 

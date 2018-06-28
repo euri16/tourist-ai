@@ -4,32 +4,26 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.databinding.DataBindingUtil
-import android.os.Build
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.eury.touristai.R
-import com.eury.touristai.TouristAI
 import com.eury.touristai.databinding.PlaceSearchFragmentBinding
-import com.eury.touristai.repository.remote.models.PlaceSearchResponse
-import com.eury.touristai.ui.main.MainActivity
 import com.eury.touristai.ui.main.viewmodels.PlaceSearchViewModel
 import com.mvc.imagepicker.ImagePicker
-import com.eury.touristai.ui.main.adapters.PlacesAdapter
 import com.eury.touristai.ui.main.fragments.dialogs.TextSearchDialogFragment
 import com.eury.touristai.utils.ExifUtil
 import com.eury.touristai.utils.Loggable.Companion.log
+import com.eury.touristai.utils.arePermissionsGranted
+import com.eury.touristai.utils.getAppCompatActivity
 import com.eury.touristai.utils.showDialog
 import com.google.android.gms.ads.AdRequest
 import kotlinx.android.synthetic.main.place_search_fragment.*
-import org.jetbrains.anko.bundleOf
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.support.v4.act
 import org.jetbrains.anko.uiThread
 
 class PlaceSearchFragment : Fragment() {
@@ -46,33 +40,31 @@ class PlaceSearchFragment : Fragment() {
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(activity!!).get(PlaceSearchViewModel::class.java)
-        binding.viewModel = viewModel
-
-        val adRequest = AdRequest.Builder()
-                .addTestDevice("3C4B0849D78F920065BC35369C976A74")
-                .build()
-        adView.loadAd(adRequest)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        checkPermissions()
+        initializeAd()
+        initializeAnimationAndPicker()
 
         ivPickImage.setOnClickListener {
             ImagePicker.pickImage(this, "Select your image:")
         }
 
-        (activity as? AppCompatActivity)?.supportActionBar?.hide()
-
-        ImagePicker.setMinQuality(600, 600)
-
-        pulsator.start()
-
         tvRecentSearches.setOnClickListener {
             findNavController().navigate(R.id.searchHistoryAction)
         }
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        viewModel = ViewModelProviders.of(activity!!).get(PlaceSearchViewModel::class.java)
+        binding.viewModel = viewModel
 
         viewModel.model.isError.observe(this, Observer { isError ->
-            if(mTextSearchDialog == null) { mTextSearchDialog = TextSearchDialogFragment.newInstance() }
-            if (isError == true && !(mTextSearchDialog?.isAdded ?: false)) {
+            log.d("observing isError: ${viewModel.isTextSearchDialogShowing}")
+            if (isError == true && !viewModel.isTextSearchDialogShowing) {
+                viewModel.isTextSearchDialogShowing = true
+                mTextSearchDialog = TextSearchDialogFragment.newInstance()
                 showDialog(mTextSearchDialog!!, true, TEXT_SEARCH_DIALOG_TAG)
             }
         })
@@ -91,6 +83,29 @@ class PlaceSearchFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         val path = ImagePicker.getImagePathFromResult(context, requestCode, resultCode, data)
         path?.let { compressPictureAndSubmit(it) }
+    }
+
+    private fun initializeAd() {
+        val adRequest = AdRequest.Builder()
+                .addTestDevice("3C4B0849D78F920065BC35369C976A74")
+                .build()
+        adView.loadAd(adRequest)
+    }
+
+    private fun checkPermissions() {
+        getAppCompatActivity()?.let { activity ->
+            activity.supportActionBar?.hide()
+            if (!activity.arePermissionsGranted(PlaceSearchViewModel.REQUIRED_PERMISSIONS)) {
+                ActivityCompat.requestPermissions(activity,
+                        PlaceSearchViewModel.REQUIRED_PERMISSIONS,
+                        PlaceSearchViewModel.PERMISSIONS_REQUEST_CODE)
+            }
+        }
+    }
+
+    private fun initializeAnimationAndPicker() {
+        ImagePicker.setMinQuality(600, 600)
+        pulsator.start()
     }
 
     private fun compressPictureAndSubmit(imagePath: String) {

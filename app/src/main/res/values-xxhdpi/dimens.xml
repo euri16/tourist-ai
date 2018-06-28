@@ -18,5 +18,5 @@
     <dimen name="f_place_search_pulsator_size">200dp</dimen>
     <dimen name="f_place_search_tv_app_name_margin_top">10dp</dimen>
     <dimen name="f_place_search_tv_app_name_textsize">27sp</dimen>
-    <dimen name="f_place_search_tv_recent_searches_margin_top">25dp</dimen>
+    <dimen name="f_place_search_tv_recent_searches_margin_top">30dp</dimen>
 </resources>

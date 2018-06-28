@@ -1,12 +1,15 @@
 package com.eury.touristai.ui.main.fragments.dialogs
 
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.eury.touristai.R
+import com.eury.touristai.ui.main.viewmodels.PlaceSearchViewModel
 import kotlinx.android.synthetic.main.text_search_dialog.*
 
 /**
@@ -15,11 +18,18 @@ import kotlinx.android.synthetic.main.text_search_dialog.*
  */
 class TextSearchDialogFragment : DialogFragment() {
 
+    private lateinit var viewModel: PlaceSearchViewModel
     private var mListener: OnTextSearchListener? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.text_search_dialog, container, false)
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        viewModel = ViewModelProviders.of(activity!!).get(PlaceSearchViewModel::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +60,10 @@ class TextSearchDialogFragment : DialogFragment() {
         }
     }
 
+    override fun onDismiss(dialog: DialogInterface?) {
+        super.onDismiss(dialog)
+        viewModel.isTextSearchDialogShowing = false
+    }
 
     interface OnTextSearchListener {
         fun onTextSubmitted(text: String)

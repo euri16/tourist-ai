@@ -1,5 +1,6 @@
 package com.eury.touristai.ui.main.viewmodels
 
+import android.Manifest
 import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
 import android.graphics.Bitmap
@@ -25,6 +26,7 @@ class PlaceSearchViewModel(application: Application) : AndroidViewModel(applicat
                     WikipediaServiceGenerator.createService(WikiRequests::class.java))
 
     var model: PlaceSearch = PlaceSearch()
+    var isTextSearchDialogShowing = false
 
     init {
         model.isError.value = false
@@ -68,5 +70,12 @@ class PlaceSearchViewModel(application: Application) : AndroidViewModel(applicat
         model.isLoading.value = false
         model.places.value = response
         model.isError.value = isError
+    }
+
+    companion object {
+        const val PERMISSIONS_REQUEST_CODE = 0
+        val REQUIRED_PERMISSIONS = arrayOf(
+                Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
     }
 }

@@ -100,9 +100,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginLeft="10dp"
-                    android:background="@drawable/black_radius_bg"
-                    android:drawableStart="@drawable/ic_phone"
-                    android:drawableLeft="@drawable/ic_phone"
+                    android:background="@drawable/accent_radius_bg"
+                    android:drawableStart="@drawable/phone_drawable_left"
+                    android:drawableLeft="@drawable/phone_drawable_left"
                     android:drawablePadding="@dimen/f_place_details_tv_phone_drawable_padding"
                     android:paddingLeft="@dimen/f_place_details_tv_phone_padding_sides"
                     android:paddingTop="@dimen/f_place_details_tv_phone_padding_top_bottom"
@@ -175,8 +175,16 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:layout_margin="13dp"
-            android:background="@drawable/black_radius_bg"
-            android:padding="13dp"
-            android:textColor="@android:color/white"/>
+            android:background="@drawable/orange_radius_bg"
+            android:textStyle="bold"
+            android:paddingRight="12dp"
+            android:paddingLeft="12dp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:gravity="center_vertical"
+            android:textColor="@android:color/white"
+            android:drawableLeft="@drawable/maps_drawable_left"
+            android:drawableStart="@drawable/maps_drawable_left"
+            android:drawablePadding="2dip"/>
     </android.support.constraint.ConstraintLayout>
 </layout>

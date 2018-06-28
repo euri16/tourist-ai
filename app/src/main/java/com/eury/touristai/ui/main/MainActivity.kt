@@ -14,6 +14,10 @@ import com.eury.touristai.R
 import com.eury.touristai.ui.main.fragments.dialogs.TextSearchDialogFragment
 import com.eury.touristai.ui.main.viewmodels.PlaceSearchViewModel
 import com.eury.touristai.utils.Loggable.Companion.log
+import android.content.pm.PackageManager
+import android.support.v4.app.ActivityCompat
+import android.support.v7.app.AlertDialog
+import android.text.Html
 
 class MainActivity : AppCompatActivity(), TextSearchDialogFragment.OnTextSearchListener {
     private var viewModel: PlaceSearchViewModel? = null
@@ -49,6 +53,21 @@ class MainActivity : AppCompatActivity(), TextSearchDialogFragment.OnTextSearchL
         NavigationUI.setupActionBarWithNavController(this, navController)
     }
 
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        if(grantResults.any { it == PackageManager.PERMISSION_DENIED}) {
+            AlertDialog.Builder(this)
+                    .setCancelable(false)
+                    .setTitle(Html.fromHtml("<font color='#46B769'>${getString(R.string.camera_permission_title)}"))
+                    .setMessage(getString(R.string.camera_permission_message))
+                    .setPositiveButton("OK") { dialog, _ ->
+                        ActivityCompat.requestPermissions(this@MainActivity, PlaceSearchViewModel.REQUIRED_PERMISSIONS, PlaceSearchViewModel.PERMISSIONS_REQUEST_CODE)
+                        dialog.dismiss()
+                    }.show()
+        }
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
     override fun onSupportNavigateUp() = NavigationUI.navigateUp(null,
                     Navigation.findNavController(this, R.id.my_nav_host_fragment))
 
@@ -58,4 +77,7 @@ class MainActivity : AppCompatActivity(), TextSearchDialogFragment.OnTextSearchL
         viewModel?.submitPlaceName(placeName = text)
     }
 
+    fun onRequestPermissions() {
+
+    }
 }

@@ -54,9 +54,5 @@ class SearchHistoryListFragment : Fragment() {
         val action = PlaceSearchFragmentDirections.placeDetailAction(placeId, placeName)
         findNavController().navigate(action)
     }
-
-    companion object {
-        fun newInstance() = SearchHistoryListFragment()
-    }
 }
 

@@ -5,12 +5,9 @@ import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.work.State
-import androidx.work.WorkManager
 import com.eury.touristai.R
 import com.eury.touristai.databinding.PlaceDetailsFragmentBinding
 import com.eury.touristai.ui.main.viewmodels.PlaceDetailsViewModel
@@ -20,11 +17,9 @@ import kotlinx.android.synthetic.main.place_details_fragment.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.LatLng
-import android.support.v4.content.ContextCompat.startActivity
-import android.content.Intent
-import android.net.Uri
-import java.util.*
-
+import com.eury.touristai.utils.getAppCompatActivity
+import com.eury.touristai.utils.openPhoneDialer
+import com.eury.touristai.utils.openPlaceInMap
 
 /**
  * Created by euryperez on 5/17/18.
@@ -45,7 +40,7 @@ class PlaceDetailsFragment : Fragment(), OnMapReadyCallback {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        (activity as? AppCompatActivity)?.supportActionBar?.hide()
+        getAppCompatActivity()?.supportActionBar?.hide()
         viewModel = ViewModelProviders.of(this).get(PlaceDetailsViewModel::class.java)
         binding.viewModel = viewModel
 
@@ -65,12 +60,15 @@ class PlaceDetailsFragment : Fragment(), OnMapReadyCallback {
                 updateMapLocation(lat, lon)
             }
 
-            tvOpenMaps.setOnClickListener {
-                val gmmIntentUri = Uri.parse(getString(R.string.maps_query_intent, place?.placeId))
-                val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
-                mapIntent.setPackage("com.google.android.apps.maps")
-                mapIntent.resolveActivity(context?.packageManager)?.let {
-                    context?.startActivity(mapIntent)
+            place?.placeId?.let {placeId ->
+                tvOpenMaps.setOnClickListener {
+                    context?.openPlaceInMap(placeId)
+                }
+            }
+
+            place?.phoneNumber?.let { phoneNumber ->
+                tvPhone.setOnClickListener {
+                    context?.openPhoneDialer(phoneNumber)
                 }
             }
         })

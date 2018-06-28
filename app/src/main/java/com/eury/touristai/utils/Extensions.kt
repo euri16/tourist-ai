@@ -1,7 +1,7 @@
 package com.eury.touristai.utils
 
+import android.Manifest
 import android.animation.Animator
-import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
 import android.support.v4.app.DialogFragment
@@ -20,21 +20,43 @@ import com.eury.touristai.utils.Loggable.Companion.log
 import retrofit2.Call
 import retrofit2.Response
 import java.io.ByteArrayOutputStream
-import android.view.animation.AccelerateInterpolator
 import java.text.Normalizer
 import android.animation.AnimatorListenerAdapter
-import android.support.v4.view.ViewCompat.animate
-import android.support.v4.view.ViewCompat.animate
-
-
-
-
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.support.v4.app.ActivityCompat
+import com.eury.touristai.R
 
 
 /**
  * Created by euryperez on 5/10/18.
  * Property of Instacarro.com
  */
+
+fun Fragment.getAppCompatActivity() : AppCompatActivity? {
+    return (activity as? AppCompatActivity)
+}
+
+
+fun AppCompatActivity.arePermissionsGranted(permissions: Array<String>): Boolean {
+    return permissions.all { ActivityCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED }
+}
+
+fun Context.openPlaceInMap(placeId:String) {
+    val gmmIntentUri = Uri.parse(getString(R.string.maps_query_intent, placeId))
+    val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+    mapIntent.setPackage("com.google.android.apps.maps")
+    mapIntent.resolveActivity(packageManager)?.let {
+        startActivity(mapIntent)
+    }
+}
+
+fun Context.openPhoneDialer(phoneNumber:String) {
+    val intent = Intent(Intent.ACTION_DIAL)
+    intent.data = Uri.parse("tel:$phoneNumber")
+    startActivity(intent)
+}
 
 fun Bitmap.toBase64(): String {
     val byteArrayOutputStream = ByteArrayOutputStream()
@@ -114,10 +136,8 @@ fun FragmentActivity.showDialog(dialogFragment: DialogFragment, cancelable: Bool
 
 fun Fragment.showDialog(dialogFragment: DialogFragment, cancelable: Boolean, tag: String) {
     try {
-        val fragmentTransaction = childFragmentManager.beginTransaction()
         dialogFragment.isCancelable = cancelable
-        fragmentTransaction.add(dialogFragment, tag)
-        fragmentTransaction.commitAllowingStateLoss()
+        dialogFragment.show(childFragmentManager, tag)
     } catch (ex: IllegalStateException) {
         log.d(ex.localizedMessage)
     }
