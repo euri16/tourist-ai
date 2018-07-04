@@ -7,7 +7,7 @@
         android:id="@+id/ivPlacePicture"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@color/cardview_dark_background"
+        android:src="#FF424242"
         android:scaleType="centerCrop"/>
     <TextView
         android:id="@+id/tvPlaceName"

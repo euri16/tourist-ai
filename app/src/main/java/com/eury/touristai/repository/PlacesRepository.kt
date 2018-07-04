@@ -12,16 +12,13 @@ import com.eury.touristai.utils.stripAccents
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import retrofit2.Response
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Created by euryperez on 5/10/18.
  * Property of Instacarro.com
  */
 
-@Singleton
-class PlacesRepository @Inject constructor(private val visionWebService: VisionRequests,
+class PlacesRepository constructor(private val visionWebService: VisionRequests,
                                            private val placesWebService: PlacesRequests,
                                            private val wikiWebService: WikiRequests) {
 

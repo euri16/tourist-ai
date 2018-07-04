@@ -23,15 +23,19 @@ class FetchPlaceDetailsWorker : Worker() {
     override fun doWork(): Worker.Result {
         val placeId = inputData.getString(PLACE_ID_KEY, null)
 
-        val response = placesRepository.getPlaceDetailsWithPlaceId(placeId)
+        placeId?.let {
+            val response = placesRepository.getPlaceDetailsWithPlaceId(placeId)
 
-        if(TextUtils.isEmpty(placeId) || response?.isSuccessful == false) {
-            return Worker.Result.FAILURE
+            if(TextUtils.isEmpty(placeId) || response?.isSuccessful == false) {
+                return Worker.Result.FAILURE
+            }
+
+            placesRepository.processPlacesDetails(response?.body(), placeId)
+
+            return Worker.Result.SUCCESS
         }
 
-        placesRepository.processPlacesDetails(response?.body(), placeId)
-
-        return Worker.Result.SUCCESS
+        return Worker.Result.FAILURE
     }
 
     companion object {

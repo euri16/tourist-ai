@@ -74,7 +74,7 @@ class PlaceDetailsViewModel(application: Application) : AndroidViewModel(applica
                 val placeDetailsWork = OneTimeWorkRequestBuilder<FetchPlaceDetailsWorker>()
                         .setInputData(buildPlaceDetailsWorkerData(placeId))
                         .build()
-                WorkManager.getInstance().enqueue(wikiByNameWork, placeDetailsWork)
+                WorkManager.getInstance()?.enqueue(wikiByNameWork, placeDetailsWork)
             }
         }
     }
